@@ -27,7 +27,7 @@ import './DisplacementSphere.css';
 
 const DisplacementSphere = props => {
   const colorWhite = 0xffffff;
-  const themeId = 'light';
+  const themeId ='light';
   const start = useRef(Date.now());
   const canvasRef = useRef();
   const mouse = useRef();
@@ -91,7 +91,7 @@ const DisplacementSphere = props => {
 
   useEffect(() => {
     const dirLight = new DirectionalLight(colorWhite, 0.6);
-    const ambientLight = new AmbientLight(colorWhite, themeId === 'light' ? 0.8 : 0.1);
+    const ambientLight = new AmbientLight(colorWhite, themeId === 'light' ? 0.75 : 0.1);
 
     dirLight.position.z = 200;
     dirLight.position.x = 100;
@@ -195,7 +195,6 @@ const DisplacementSphere = props => {
   return (
     <>
         <canvas
-          aria-hidden
           className={classNames('displacement-sphere', `displacement-sphere--entered` )}
           ref={canvasRef}
           {...props}

@@ -1,13 +1,16 @@
-import { Fragment } from 'react';
 import './App.css';
 import Home from './components/Home';
+import Counter from './components/Navbar/counter';
 
 function App() {
   return (
     <div className="App">
-      <Fragment>
-        <Home />
-      </Fragment>
+      
+      <div className='relative'>
+          <DisplacementSphere />
+      </div>
+
+      <Counter />
     </div>
   );
 }
