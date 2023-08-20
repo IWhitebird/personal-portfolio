@@ -1,0 +1,71 @@
+:root {
+    --speed: 1s;
+  }
+
+
+.home__titletext {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+    position: relative;
+    left: 47.2%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    font-size: 5rem;
+    color: white;
+  }
+
+  #animtext span {
+    --color: var(--red);
+    color: white;
+    position: relative;
+    clip-path: inset(0);
+    animation-name: text-reveal, shimmy;
+    animation-duration: var(--speed);
+    animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
+    animation-fill-mode: both;
+    animation-timing-function: steps(1), ease-out;
+  }
+
+  @keyframes shimmy {
+    0% {
+      transform: translateX(-1ch);
+    }
+  }
+
+  @keyframes text-reveal {
+    0% {
+      color: transparent;
+    }
+    50%, 100% {
+      color: rgba(10, 1, 1, 0.555);
+    }
+  }
+
+  #animtext span:after {
+    content: "";
+    position: absolute;
+    inset: -20% 0;
+    background-color: var(--color);
+    animation-name: block-reveal;
+    animation-duration: var(--speed);
+    animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
+    animation-fill-mode: both;
+  }
+
+  @keyframes block-reveal {
+    0% {
+      transform: translateX(-110%);
+    }
+    45%, 55% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(110%);
+    }
+  }
+
+  #animtext span{
+    --color: rgb(3, 219, 248);
+  }

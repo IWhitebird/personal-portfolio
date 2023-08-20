@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Poppins:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300&family=Poppins:wght@100&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+  ::selection {
+    color: rgb(6, 6, 5);
+    background: rgb(15, 227, 220);
+  }
+}
 
 body {
   margin: 0;
@@ -9,6 +19,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #c8c8c8;
+}
+
+@font-face {
+  font-family: myFirstFont;
+  src: url('https://fonts.google.com/?preview.text=gotham&preview.text_type=custom');
 }
 
 code {

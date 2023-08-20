@@ -4,7 +4,7 @@ function useWindowSize() {
   const isClient = typeof window === 'object';
   const isIOS = navigator.userAgent.match(/iphone|ipod|ipad/i);
   const axis = useRef(() => ({ w: 0, h: 0 }));
-  const dimensions = useRef(() => Math.abs(window.orientation));
+  const dimensions = useRef(() => Math.abs(window.screen.orientation));
 
   const createRuler = useCallback(() => {
     let ruler = document.createElement('div');
@@ -32,7 +32,7 @@ function useWindowSize() {
     if (isIOS) {
       createRuler();
 
-      if (Math.abs(window.orientation) !== 90) {
+      if (Math.abs(window.screen.orientation) !== 90) {
         return dimensions.current.h;
       }
 

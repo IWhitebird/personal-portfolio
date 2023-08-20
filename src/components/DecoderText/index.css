@@ -1,14 +1,19 @@
+
+:root {
+  --fontWeightRegular: 300;
+} 
+
+
 .decoder-text {
-    &::after {
-      content: '_';
-      visibility: hidden;
-    }
+  &::after {
+    content: '_';
+    visibility: hidden;
   }
-  
-  .decoder-text__glyph {
-    opacity: 0.8;
-    font-weight: var(--fontWeightRegular);
-    font-family: var(--decoderFontStack);
-    line-height: 0;
-  }
+}
+
+.decoder-text__glyph {
+  opacity: 0.8;
+  font-weight: var(--fontWeightRegular);
+  line-height: 0;
+} 
   

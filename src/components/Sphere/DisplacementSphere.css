@@ -1,19 +1,24 @@
+/* Default styles for .displacement-sphere */
 .displacement-sphere {
-    position: absolute;
-    width: 100vw;
-    z-index: -1;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 1;
-    opacity: 0;
-    transition-property: opacity;
-    transition-duration: 3s;
-    transition-timing-function: var(--bezierFastoutSlowin);
-  }
-  
-  .displacement-sphere--entering,
-  .displacement-sphere--entered {
-    opacity: 1;
-  }
-  
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 3s;
+  transition-timing-function: var(--bezierFastoutSlowin);
+  overflow-y: hidden;
+}
+
+/* Styles for entering and entered states */
+.displacement-sphere--entering,
+.displacement-sphere--entered {
+  opacity: 1;
+  overflow-y: hidden;
+}
+
+
+/* Media query for mobile devices */
