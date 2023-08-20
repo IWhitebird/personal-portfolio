@@ -1,17 +1,15 @@
 import './App.css';
 import Home from './components/Home';
-import Counter from './components/Navbar/counter';
+import Navbar from './components/Navbar';
+import DisplacementSphere from './components/Sphere';
 
 function App() {
   return (
-    <div className="App">
-      
-      <div className='relative'>
-          <DisplacementSphere />
-      </div>
-
-      <Counter />
-    </div>
+    <>
+      <DisplacementSphere />
+      <Home />
+      <Navbar />
+    </>
   );
 }
 
