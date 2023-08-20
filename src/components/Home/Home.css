@@ -20,6 +20,7 @@
     --color: var(--red);
     color: white;
     position: relative;
+    display: inline-block;
     clip-path: inset(0);
     animation-name: text-reveal, shimmy;
     animation-duration: var(--speed);
@@ -61,8 +62,12 @@
     45%, 55% {
       transform: translateX(0);
     }
-    100% {
-      transform: translateX(110%);
+    99.9% {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+    100%{
+        opacity: 0;
     }
   }
 
