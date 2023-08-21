@@ -109,7 +109,7 @@ const DisplacementSphere = props => {
   useEffect(() => {
     const { width, height } = windowSize;
 
-    const adjustedHeight = height + height * 0.3;
+    const adjustedHeight = height + height * 0.8;
     renderer.current.setSize(width, adjustedHeight);
     camera.current.aspect = width / adjustedHeight;
     camera.current.updateProjectionMatrix();

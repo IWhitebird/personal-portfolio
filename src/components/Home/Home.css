@@ -4,19 +4,12 @@
 
 
 .home__titletext {
-    display: block;
-    justify-content: center;
-    align-items: center;
     margin-top: 4rem;
-    position: relative;
-    left: 47.2%;
-    transform: translate(-50%, -50%);
-    width: auto;
     font-size: 5rem;
     color: white;
   }
 
-  #animtext span {
+  #animtext p {
     --color: var(--red);
     color: white;
     position: relative;
@@ -44,7 +37,7 @@
     }
   }
 
-  #animtext span:after {
+  #animtext p:after {
     content: "";
     position: absolute;
     inset: -20% 0;
@@ -71,6 +64,6 @@
     }
   }
 
-  #animtext span{
+  #animtext p{
     --color: rgb(3, 219, 248);
   }
