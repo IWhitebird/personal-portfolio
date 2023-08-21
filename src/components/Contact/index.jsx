@@ -20,16 +20,18 @@ const Contact = () => {
   return (
     <>
       <Fade left onReveal={() => setDecode(true)}> 
+        
         <div className="wrapper">
+
           <div id="contact" className="contact">
 
-            <div className="contact_heading font-mons text-black text-left">
+            <div className="contact_heading font-mons text-black lg:text-left text-4xl font-bold lg:text-6xl">
               <DecoderText text={inputText} start={decode} />
             </div>
         
-            <hr className="animatedhr" />
+            <div className="animatedhr" />
         
-            <form action="POST">
+            <form action="POST"> 
               <div className="formplaceholder text-left font-mons">
                 <div class="input-field animated-element ">
                   <input
@@ -58,8 +60,8 @@ const Contact = () => {
                   </label>
                 </div>
 
-                <div className="flex h-[80px]">
-                  <button className="sendbutton animated-element" type="submit">
+                <div className="flex h-auto items-center mb-7">
+                  <button className="sendbutton animated-element mx-auto" type="submit">
                     <div className="flex flex-row-reverse gap-3 w-full justify-center">
                       <AiOutlineSend className="mt-1" />
                       <p> Send me a message </p>
