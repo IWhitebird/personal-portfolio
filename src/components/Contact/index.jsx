@@ -10,7 +10,7 @@ const Contact = () => {
 
   const autoGrow = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "75px";
+      textareaRef.current.style.height = "77px";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
