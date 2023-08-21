@@ -1,11 +1,16 @@
-
+.wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
 .contact {
-    margin-left: 38%;
     width: 20%;
     color: rgb(0, 0, 0);
     z-index: 1;
-    height: 100vh;
+    height: full;
+    margin-right: 8%;
 }
 
 .contact_heading {
@@ -13,6 +18,20 @@
     margin-left: 12rem;
     width: auto;
 }
+
+@media screen and (max-width: 768px) {
+    .contact_heading {
+        transform: scale(1);
+        margin-left: 2rem;
+        width: 300px;
+        text-align: center;
+    }
+    .animatedhr {
+        width: 80%;
+    }
+
+}
+
 
 .animatedhr {
     opacity: 0;

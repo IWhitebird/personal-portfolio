@@ -65,7 +65,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a href="#">
+                <a href="#contact">
                   <div className="icon">
                   <AiFillMail />
                   </div>

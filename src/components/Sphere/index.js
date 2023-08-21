@@ -2,7 +2,7 @@ import DisplacementSphere from './DisplacementSphere';
 
 const Home = () => {
   return (
-    <div >
+    <div>
         <DisplacementSphere />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef , Suspense } from 'react';
 import classNames from 'classnames';
 import {
   Vector2,
@@ -14,7 +14,7 @@ import {
   SphereBufferGeometry,
   Mesh,
   Color,
-} from 'three';
+} from 'spherethree';
 import { spring, value } from 'popmotion';
 import vertShader from './sphereVertShader';
 import fragShader from './sphereFragShader';
@@ -98,7 +98,7 @@ const DisplacementSphere = props => {
     dirLight.position.y = 100;
 
     lights.current = [dirLight, ambientLight];
-    scene.current.background = new Color(...rgbToThreeColor('200 200 200'));
+    scene.current.background = new Color(...rgbToThreeColor('242 242 242'));
     lights.current.forEach(light => scene.current.add(light));
 
     return () => {
@@ -194,11 +194,13 @@ const DisplacementSphere = props => {
 
   return (
     <>
+      <Suspense fallback={null}>
         <canvas
           className={classNames('displacement-sphere', `displacement-sphere--entered` )}
           ref={canvasRef}
           {...props}
         />
+      </Suspense>
     </>
   );
 };
