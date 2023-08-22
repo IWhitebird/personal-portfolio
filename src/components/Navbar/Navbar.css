@@ -3,7 +3,7 @@
     --spaces-size: calc(var(--icon-size)*.3);
     --indicator-border: calc(var(--icon-size)*.07);
     --bg-clr: transparent;
-    --bar-clr: rgba(255, 255, 255, 0.2);
+    --bar-clr: rgba(171, 171, 171, 0.726);
     --indicator-clr: rgba(221, 202, 133, 0.821);
   }
   

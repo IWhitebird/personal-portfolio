@@ -11,8 +11,8 @@ const Contact = () => {
   const [decode, setDecode] = useState(false);
 
   const autoGrow = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "77px";
+    if (textareaRef.current.scrollHeight) {
+      textareaRef.current.style.height = "70px";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
@@ -21,7 +21,7 @@ const Contact = () => {
     <>
       <Fade left onReveal={() => setDecode(true)}> 
         
-        <div className="wrapper">
+        <div className="wrapper w-[80%] mx-auto lg:w-full">
 
           <div id="contact" className="contact">
 
@@ -32,6 +32,7 @@ const Contact = () => {
             <div className="animatedhr" />
         
             <form action="POST"> 
+
               <div className="formplaceholder text-left font-mons">
                 <div class="input-field animated-element ">
                   <input
@@ -46,7 +47,7 @@ const Contact = () => {
                   </label>
                 </div>
 
-                <div class="input-field animated-element">
+                <div class="input-field animated-element inpt-2">
                   <textarea
                     ref={textareaRef}
                     onInput={autoGrow}
@@ -54,6 +55,7 @@ const Contact = () => {
                     class="custom-input2"
                     autoComplete="off"
                     required
+                    rows={2}
                   ></textarea>
                   <label for="message" class="custom-label2">
                     Message:

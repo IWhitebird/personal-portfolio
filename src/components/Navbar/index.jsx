@@ -56,7 +56,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a href="#">
+                <a href="#about">
                   <div className="icon">
                   <FaAddressCard />
                   </div>

@@ -1,3 +1,5 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap'); */
+
 :root {
     --speed: 1s;
   }
@@ -85,3 +87,14 @@
       }
     }
    }  
+
+
+.clock {
+    position: absolute;
+    top: 5%;
+    left: 7%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #000000;
+    font-size: 20px;
+    letter-spacing: 7px;
+}
