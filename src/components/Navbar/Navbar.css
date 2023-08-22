@@ -3,8 +3,8 @@
     --spaces-size: calc(var(--icon-size)*.3);
     --indicator-border: calc(var(--icon-size)*.07);
     --bg-clr: transparent;
-    --bar-clr: rgba(171, 171, 171, 0.726);
-    --indicator-clr: rgba(221, 202, 133, 0.821);
+    --bar-clr: rgba(208, 208, 208, 0.617);
+    --indicator-clr: rgba(55, 55, 55, 0.365);
   }
   
 
@@ -13,12 +13,13 @@
     bottom: 0;
     left: 0;
     height: 140px;
-    width: 100%;
+    width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: var(--bg-clr);
-    z-index: 100;
+    z-index: 40;
+    margin-left: 37.5%;
   }
   
   .navbar {

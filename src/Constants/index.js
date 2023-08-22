@@ -66,4 +66,23 @@ import {
   ];
 
 
-  export  {technologies };
+
+  const projectsData = [
+    {
+      id: 1,
+      name: "Project 1",
+      description: "Description for Project 1",
+      imageUrl: "url-to-image-1",
+      projectUrl: "url-to-project-1",
+    },
+    {
+      id: 2,
+      name: "Project 2",
+      description: "Description for Project 2",
+      imageUrl: "url-to-image-2",
+      projectUrl: "url-to-project-2",
+    },
+    // Add more project objects as needed
+  ];
+
+  export  {technologies , projectsData};

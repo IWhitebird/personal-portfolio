@@ -98,3 +98,9 @@
     font-size: 20px;
     letter-spacing: 7px;
 }
+
+.resume{
+  position: absolute;
+  bottom: 7%;
+  left: 5%;
+}

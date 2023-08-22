@@ -1,6 +1,7 @@
 import React from "react";
 import { technologies } from "../../Constants";
 import Zoom from "react-reveal/Zoom";
+import Fade from "react-reveal/Fade";
 import "./About.css";
 
 const index = () => {
@@ -13,7 +14,7 @@ const index = () => {
                     Hi there!
                 </h1>
             </Zoom>
-            <Zoom left cascade>
+            <Fade left>
                 <div className="font-mons text-base lg:text-2xl text-left indent-10 w-[80%]">
                     <p className="">
                     I am a final-year Computer Science student at the University of Mumbai, with a strong passion for impactful software development. 
@@ -23,7 +24,7 @@ const index = () => {
                     </p>
 
                 </div>
-            </Zoom>
+            </Fade>
           </div>
 
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-8 items-center mx-auto ">
