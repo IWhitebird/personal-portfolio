@@ -6,7 +6,7 @@ import "./About.css";
 
 const index = () => {
   return (
-    <div id="about" className="wrapper h-screen flex items-center theme transition-colors duration-300 ease-in">
+    <div id="about" className="wrapper h-screen flex items-center theme transition-colors duration-300 ease-in overflow-hidden">
       <div className="flex flex-col lg:flex-row lg:w-[80%] mx-auto gap-[20px] justify-between h-[100%] items-center">
           <div className="w-[80%] lg:w-[50%] flex flex-col items-center mb-5">
             <Zoom left cascade>

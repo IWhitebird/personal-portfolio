@@ -1,8 +1,7 @@
 /* Default styles for .displacement-sphere */
 :root {
-  --bezierFastoutSlowin: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --bezierFastoutSlowin: cubic-bezier(0.5, 0.33, 0.14, 0.53);
 }
-
 
 .displacement-sphere {
   position: absolute;
@@ -10,19 +9,29 @@
   top: 0;
   right: 0;
   bottom: 0;
-  left: 1;
+  left: 1; /* This should be a valid value, e.g., "1px" */
   opacity: 0;
-  transition-property: opacity;
-  transition-duration: 3s;
-  transition-timing-function: var(--bezierFastoutSlowin);
-  overflow:hidden;
+  /* Replace "property-to-animate" with the actual property you want to animate */
+  transition: opacity 1s var(--bezierFastoutSlowin);
+  overflow: hidden;
 }
 
 /* Styles for entering and entered states */
 .displacement-sphere--entering,
 .displacement-sphere--entered {
-  opacity: 1;
   overflow-y: hidden;
+  animation: opacity-anim 2s var(--bezierFastoutSlowin);
+  opacity: 1;
+}
+
+
+@keyframes opacity-anim {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 

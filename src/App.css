@@ -5,8 +5,9 @@
   --contactUnderline : #000000;
   --bar-clr: rgba(208, 208, 208, 0.617);
   --indicator-clr: rgba(55, 55, 55, 0.365);
-  --navIcon: #000000;
+  --navIcon: #464646;
   --navText : #000000;
+  --myFilter: invert(0);
 }
 
 .dark-mode{
@@ -16,6 +17,7 @@
   --indicator-clr: rgba(136, 135, 135, 0.617);
   --navIcon: #fffefe9d;
   --navText : #eaeaea;
+  --myFilter: invert(0.8);
 }
 
 .App {

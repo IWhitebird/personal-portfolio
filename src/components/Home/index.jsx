@@ -5,6 +5,8 @@ import Fade from "react-reveal/Fade";
 import { MyContext } from "../../MyContext";
 import { TypeAnimation } from "react-type-animation";
 import "./Home.css";
+import resume from "../../assets/resume-svg.svg"
+import {FiDownload , FiEye} from "react-icons/fi" 
 
 const Home = () => {
   const [resumeModal, setResumeModal] = useState(false);
@@ -80,44 +82,38 @@ const Home = () => {
           <Fade left>
             <DecoderText
               delay={0}
-              className='font-mons font-extrabold leading-3 lg:mr-[16rem]'
+              className="font-mons font-extrabold leading-3 lg:mr-[16rem]"
               text="SHREYAS PATANGE"
             />
           </Fade>
 
-          {/* <h1 class="block-effect home__titletext mx-auto lg:pr-6 ">
-            <div class="block-reveal">
-              Full Stack Developer
-            </div>
-          </h1> */}
-
           <div className={`home__titletext w-full mx-auto lg:pr-10 theme `}>
             <p id="animtext">
               {" "}
-              <span className="font-bold">
-                Full Stack Developer
-              </span>{" "}
+              <span className="font-bold">Full Stack Developer</span>{" "}
             </p>
           </div>
-
-          {/* <div className="theme home__titletext w-full mx-auto lg:pr-[70px]">
-          <TypeAnimation
-            sequence={[
-              "Full Stack Developer",
-              1000, 
-            ]}
-            wrapper="span"
-            speed={50}
-            style={{ display: "inline-block" }}
-            repeat={Infinity}
-          />
-        </div> */}
-
         </div>
 
-        <button className="resume" onClick={() => setResumeModal(true)}>
-          Resume
-        </button>
+        <div class="navv">
+          <input type="checkbox" />
+          <span></span>
+          <span></span>
+          <img src={resume} className="resume_svg"></img>
+          <div class="menu">
+            <li>
+              <a href="../Resume/Resume.pdf" download>
+                <FiDownload className=""/>
+              </a>
+            </li>
+            <li>
+            <a href="#">
+              <FiEye onClick={() => setResumeModal(true)} />
+              </a>
+            </li>
+          </div>
+        </div>
+        <p class="absolute left-[5.5%] bottom-[2.5%] font-mono text-lg ">Resume</p>
       </div>
     </>
   );

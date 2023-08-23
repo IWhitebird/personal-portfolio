@@ -125,3 +125,134 @@
     }
   }
 }
+
+
+
+.navv, .menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navv {
+  position: absolute; /* Changed from absolute to fixed */
+  left: 5.5%;
+  bottom: 7%;
+  background-color:var(--bar-clr);
+  padding: 15px;
+  transition: 0.5s;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 8px 15px var(--navText);
+}
+
+.menu {
+  margin: 0;
+  padding: 0;
+  width: 0;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+.navv input:checked ~ .menu {
+  width: 150px;
+}
+
+.menu li {
+  list-style: none;
+  margin: 0 10px;
+}
+
+.menu li a {
+  text-decoration: none;
+  color: var(--navIcon);
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: 0.5s;
+  font-size: 25px;
+}
+
+.menu li a:hover {
+  color: var(--contactUnderline);
+}
+
+.navv input {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 10;
+}
+
+.navv img {
+  position: absolute;
+  width: 40px;
+  z-index: 0;
+  opacity: 0;
+  filter: var(--myFilter);
+}
+
+@keyframes img_nav {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.navv input:checked ~ img {
+  display: none;
+}
+.navv input:not(:checked) ~ img {
+  animation: img_nav;
+  animation-duration: 0.4s;
+  animation-delay: 0.4s;
+  animation-fill-mode: forwards
+}
+
+.navv span {
+  position: absolute;
+  width: 30px;
+  left: 20px;
+  height: 4px;
+  border-radius: 50px;
+  background-color: #666;
+  pointer-events: none;
+  transition: 0.5s;
+  padding-right: 5px;
+  display: none;
+  z-index: 5;
+}
+
+.navv input:checked ~ span {
+  background-color: var(--navText);
+  animation: fadeIn 0.4s forwards;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.navv span:nth-child(2) {
+  transform: translateY(-8px);
+}
+
+.navv input:checked ~ span:nth-child(2) {
+  transform: translateY(0) rotate(-45deg);
+}
+
+.navv span:nth-child(3) {
+  transform: translateY(8px);
+}
+
+.navv input:checked ~ span:nth-child(3) {
+  transform: translateY(0) rotate(45deg);
+}
+
