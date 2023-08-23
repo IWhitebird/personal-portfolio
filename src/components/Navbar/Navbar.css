@@ -3,8 +3,6 @@
     --spaces-size: calc(var(--icon-size)*.3);
     --indicator-border: calc(var(--icon-size)*.07);
     --bg-clr: transparent;
-    --bar-clr: rgba(208, 208, 208, 0.617);
-    --indicator-clr: rgba(55, 55, 55, 0.365);
   }
   
 
@@ -147,20 +145,23 @@
   ul li a .text {
     -webkit-transform: translateY(250%);
     -ms-transform: translateY(250%);
-    transform: translateY(200%);
+    transform: translateY(170%);
     visibility: hidden;
     -webkit-transition: -webkit-transform .1s;
     transition: -webkit-transform .1s;
     -o-transition: transform .1s;
     transition: transform .1s;
     transition: transform .1s, -webkit-transform .1s;
+    font-weight: 500;
+    color: var(--navText);
   }
   
   ul li a .icon {
-    font-size: calc(var(--li-size)*.3);
+    font-size: calc(var(--li-size)*.4);
     -webkit-transform: translateY(50%);
     -ms-transform: translateY(50%);
     transform: translateY(50%);
+    color: var(--navIcon);
   }
   
   ul li.active .text {

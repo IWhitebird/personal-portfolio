@@ -85,20 +85,20 @@ const Home = () => {
             />
           </Fade>
 
-          <h1 class="block-effect home__titletext mx-auto lg:pr-6 ">
+          {/* <h1 class="block-effect home__titletext mx-auto lg:pr-6 ">
             <div class="block-reveal">
               Full Stack Developer
             </div>
-          </h1>
+          </h1> */}
 
-          {/* <div className={`home__titletext w-full mx-auto lg:pr-10 theme `}>
+          <div className={`home__titletext w-full mx-auto lg:pr-10 theme `}>
             <p id="animtext">
               {" "}
-              <p className="font-bold">
+              <span className="font-bold">
                 Full Stack Developer
-              </p>{" "}
+              </span>{" "}
             </p>
-          </div> */}
+          </div>
 
           {/* <div className="theme home__titletext w-full mx-auto lg:pr-[70px]">
           <TypeAnimation
@@ -112,6 +112,7 @@ const Home = () => {
             repeat={Infinity}
           />
         </div> */}
+
         </div>
 
         <button className="resume" onClick={() => setResumeModal(true)}>

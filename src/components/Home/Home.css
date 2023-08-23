@@ -1,7 +1,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap'); */
 
 :root {
-  --speed: 1.5s;
+  --speed: 1s;
   --td : 0.7s;
   --d: 0.8s;
   --bc: #00e1ff;
@@ -42,90 +42,13 @@
 }
 
 
-.block-effect {
-  font-size: calc(2px + 5vw);
-}
-
-.block-reveal {
-  --t: calc(var(--td) + var(--d));
-
-  color: transparent;
-
-  position: relative;
-  overflow: hidden;
-
-  animation: revealBlock 0s var(--t) forwards;
-}
-
-.block-reveal::after {
-  content: '';
-
-  height: 100%;
-  padding-bottom: 4px;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  background: var(--bc);
-  animation: revealingIn var(--td) var(--d) forwards, revealingOut var(--td) var(--t) forwards;
-}
-
-
-/* animations */
-@keyframes revealBlock {
-  100% {
-    color: var(--modeColor);
-    transition: color 0.5s ease-in;
-  }
-}
-
-@keyframes revealingIn {
-
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-@keyframes revealingOut {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* #animtext p {
-  --color: var(--red);
-  position: relative;
-  display: inline-block;
+#animtext span {
   clip-path: inset(0);
+  position: relative;
   animation-name: text-reveal, shimmy;
   animation-duration: var(--speed);
-  animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
   animation-fill-mode: both;
-  animation-timing-function: steps(1), ease-out;
+  animation-timing-function: steps(1), ease-in-out;
 }
 
 @keyframes shimmy {
@@ -136,24 +59,24 @@
 
 @keyframes text-reveal {
   0% {
+    transform: translateX(-100px);
     color: transparent;
   }
 
   50%,
   100% {
-    color: var(--modeColor);
+    transform: translateX(0px);
   }
 }
 
-
-#animtext p:after {
+#animtext span:after {
   content: "";
   position: absolute;
-  inset: -20% 0;
-  background-color: var(--color);
+  inset: 0;
+  background-color: cyan;
   animation-name: block-reveal;
   animation-duration: var(--speed);
-  animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
+  animation-delay: 0.4s;
   animation-fill-mode: both;
 }
 
@@ -177,7 +100,7 @@
   }
 }
 
-#animtext p {
+#animtext span {
   --color: rgb(3, 219, 248);
 }
 
@@ -201,4 +124,4 @@
       opacity: 0;
     }
   }
-} */
+}

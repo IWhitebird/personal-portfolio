@@ -1,4 +1,9 @@
 /* Default styles for .displacement-sphere */
+:root {
+  --bezierFastoutSlowin: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+
 .displacement-sphere {
   position: absolute;
   z-index: -1;

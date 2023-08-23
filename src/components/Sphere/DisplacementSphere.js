@@ -203,13 +203,13 @@ const DisplacementSphere = props => {
 
   return (
     <>
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}> */}
         <canvas
           className={classNames('displacement-sphere', `displacement-sphere--entered` )}
           ref={canvasRef}
           {...props}
         />
-      </Suspense>
+      {/* </Suspense> */}
     </>
   );
 };
