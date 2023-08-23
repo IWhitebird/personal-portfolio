@@ -21,11 +21,11 @@ const Contact = () => {
     <>
       <Fade left onReveal={() => setDecode(true)}> 
         
-        <div className="wrapper w-[80%] mx-auto lg:w-full">
+        <div className="wrapper w-[80%] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
 
           <div id="contact" className="contact">
 
-            <div className="contact_heading font-mons text-black lg:text-left text-4xl font-bold lg:text-6xl">
+            <div className="contact_heading font-mons lg:text-left text-4xl font-bold lg:text-6xl">
               <DecoderText text={inputText} start={decode} />
             </div>
         

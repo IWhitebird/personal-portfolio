@@ -1,3 +1,9 @@
+
+
+.theme {
+    color: var(--modeColor);
+}
+
 .wrapper{
     display: flex;
     justify-content: center;
@@ -13,11 +19,12 @@
 .contact {
     width: 600px;
     height: auto;
-    color: rgb(0, 0, 0);
+    color: var(--modeColor);
     z-index: 1;
     height: full;
     display: flex;
     flex-direction: column;
+    transition: color 0.5s ease;
 }
 
 .contact_heading {
@@ -42,8 +49,9 @@
     margin-top: 2rem;
     max-width: 100%;
     animation: animatedrow 0.75s linear 0.5s forwards;
-    border: 1px solid black;
+    border: 1px solid var(--modeColor);
     border-radius: 10px;
+    transition: color 1s ease;
 }
 
 @keyframes animatedrow {
@@ -114,7 +122,7 @@ form {
     top: 0;
     left: 0;
     width: 100%;
-    color: #000000;
+    color: var(--modeColor);
     transition: 0.2s all;
     cursor: text;
     padding: 0;
@@ -130,7 +138,7 @@ form {
     left: 0px;
     width: 100%;
     height: 100%;
-    border-bottom: 2px solid rgb(0, 0, 0);
+    border-bottom: 2px solid var(--contactUnderline);
     transform: translateX(-110%);
     transition: all 0.5s ease;
 }
@@ -142,7 +150,7 @@ form {
     left: 0px;
     width: 100%;
     height: 100%;
-    border-bottom: 2px solid rgb(0, 0, 0);
+    border-bottom: 2px solid var(--contactUnderline);
     transform: translateX(-110%);
     transition: all 0.5s ease;
 }
@@ -169,7 +177,7 @@ form {
     font-size: 1.2rem;
     padding: 0.4rem 0;
     border-bottom: 2px solid rgba(93, 93, 93, 0.559);
-    color: rgb(0, 0, 0);
+    color: var(--modeColor);
     max-height: 400px;
     /* overflow: hidden; */
 }
@@ -189,7 +197,7 @@ form {
 .custom-input2:valid~.custom-label2 {
     font-size: 14px;
     top: -25px;
-    color: rgb(0, 0, 0);
+    color: var(--modeColor);
 }
 
 .custom-input:focus+.custom-label::after,
@@ -206,14 +214,14 @@ form {
     height: 50px;
     font-size: 1.1rem;
     background-color: transparent;
-    border: 2px solid rgb(0, 0, 0);
-    color: rgb(0, 0, 0);
+    border: 2px solid var(--modeColor);
+    color: var(--modeColor);
     transition: 0.3s ease;
     transition: all 0.5s ease;
 }
 
 .sendbutton:hover {
     font-size: 1.2rem;
-    color: black;
+    color: var(--modeColor);
     scale: 1.1;
 }

@@ -6,7 +6,7 @@ import "./About.css";
 
 const index = () => {
   return (
-    <div id="about" className="wrapper h-screen flex items-center">
+    <div id="about" className="wrapper h-screen flex items-center theme transition-colors duration-300 ease-in">
       <div className="flex flex-col lg:flex-row lg:w-[80%] mx-auto gap-[20px] justify-between h-[100%] items-center">
           <div className="w-[80%] lg:w-[50%] flex flex-col items-center mb-5">
             <Zoom left cascade>
@@ -14,7 +14,7 @@ const index = () => {
                     Hi there!
                 </h1>
             </Zoom>
-            <Fade left>
+            <Fade left delay={200}>
                 <div className="font-mons text-base lg:text-2xl text-left indent-10 w-[80%]">
                     <p className="">
                     I am a final-year Computer Science student at the University of Mumbai, with a strong passion for impactful software development. 
@@ -28,16 +28,16 @@ const index = () => {
           </div>
 
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-8 items-center mx-auto ">
-          <Zoom right cascade>
             {technologies.map((tech, index) => (
+          <Zoom right cascade delay={200} duration={1000}>
               <div
                 key={index}
                 className="transition-all w-[60px] lg:w-[120px] duration-300 ease-in-out hover:scale-125"
               >
                 <img src={tech.icon} className="mx-auto tech-icon" alt={tech.name} />
               </div>
-            ))}
           </Zoom>
+            ))}
         </div>
       </div>
     </div>

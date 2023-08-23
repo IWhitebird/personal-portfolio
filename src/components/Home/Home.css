@@ -1,106 +1,204 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap'); */
 
 :root {
-    --speed: 1s;
-  }
+  --speed: 1.5s;
+  --td : 0.7s;
+  --d: 0.8s;
+  --bc: #00e1ff;
+}
+
+.theme{
+  transition: color 0.5s ease-in;
+  color : var(--modeColor)
+}
 
 
 .home__titletext {
-    margin-top: 4rem;
-    font-size: 4rem;
-    color: white;
-  }
-
-  #animtext p {
-    --color: var(--red);
-    color: white;
-    position: relative;
-    display: inline-block;
-    clip-path: inset(0);
-    animation-name: text-reveal, shimmy;
-    animation-duration: var(--speed);
-    animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
-    animation-fill-mode: both;
-    animation-timing-function: steps(1), ease-out;
-  }
-
-  @keyframes shimmy {
-    0% {
-      transform: translateX(-1ch);
-    }
-  }
-
-  @keyframes text-reveal {
-    0% {
-      color: transparent;
-    }
-    50%, 100% {
-      color: rgba(10, 1, 1, 0.555);
-    }
-  }
-
-  #animtext p:after {
-    content: "";
-    position: absolute;
-    inset: -20% 0;
-    background-color: var(--color);
-    animation-name: block-reveal;
-    animation-duration: var(--speed);
-    animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
-    animation-fill-mode: both;
-  }
-
-  @keyframes block-reveal {
-    0% {
-      transform: translateX(-110%);
-    }
-    45%, 55% {
-      transform: translateX(0);
-    }
-    99.9% {
-      transform: translateX(100%);
-      opacity: 1;
-    }
-    100%{
-        opacity: 0;
-    }
-  }
-
-  #animtext p{
-    --color: rgb(3, 219, 248);
-  }
-
-  @media screen and (max-width: 768px) {
-    @keyframes block-reveal {
-      0% {
-        transform: translateY(-110%);
-      }
-      45%, 55% {
-        transform: translateY(0);
-      }
-      99.9% {
-        transform: translateY(100%);
-        opacity: 1;
-      }
-      100%{
-          opacity: 0;
-      }
-    }
-   }  
-
-
-.clock {
-    position: absolute;
-    top: 5%;
-    left: 7%;
-    transform: translateX(-50%) translateY(-50%);
-    color: #000000;
-    font-size: 20px;
-    letter-spacing: 7px;
+  margin-top: 4rem;
+  font-size: 5.5rem;
 }
 
-.resume{
+@media (max-width: 768px) {
+  .home__titletext {
+    font-size: 2.5rem;
+  }
+}
+
+.clock {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 20px;
+  letter-spacing: 7px;
+  color: var(--modeColor);
+  transition: color 0.5s ease-in;
+}
+
+.resume {
   position: absolute;
   bottom: 7%;
   left: 5%;
 }
+
+
+.block-effect {
+  font-size: calc(2px + 5vw);
+}
+
+.block-reveal {
+  --t: calc(var(--td) + var(--d));
+
+  color: transparent;
+
+  position: relative;
+  overflow: hidden;
+
+  animation: revealBlock 0s var(--t) forwards;
+}
+
+.block-reveal::after {
+  content: '';
+
+  height: 100%;
+  padding-bottom: 4px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background: var(--bc);
+  animation: revealingIn var(--td) var(--d) forwards, revealingOut var(--td) var(--t) forwards;
+}
+
+
+/* animations */
+@keyframes revealBlock {
+  100% {
+    color: var(--modeColor);
+    transition: color 0.5s ease-in;
+  }
+}
+
+@keyframes revealingIn {
+
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes revealingOut {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* #animtext p {
+  --color: var(--red);
+  position: relative;
+  display: inline-block;
+  clip-path: inset(0);
+  animation-name: text-reveal, shimmy;
+  animation-duration: var(--speed);
+  animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
+  animation-fill-mode: both;
+  animation-timing-function: steps(1), ease-out;
+}
+
+@keyframes shimmy {
+  0% {
+    transform: translateX(-1ch);
+  }
+}
+
+@keyframes text-reveal {
+  0% {
+    color: transparent;
+  }
+
+  50%,
+  100% {
+    color: var(--modeColor);
+  }
+}
+
+
+#animtext p:after {
+  content: "";
+  position: absolute;
+  inset: -20% 0;
+  background-color: var(--color);
+  animation-name: block-reveal;
+  animation-duration: var(--speed);
+  animation-delay: calc((0.5 + var(--index)) * (var(--speed) / 3));
+  animation-fill-mode: both;
+}
+
+@keyframes block-reveal {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  45%,
+  55% {
+    transform: translateX(0);
+  }
+
+  99.9% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+#animtext p {
+  --color: rgb(3, 219, 248);
+}
+
+@media screen and (max-width: 768px) {
+  @keyframes block-reveal {
+    0% {
+      transform: translateY(-110%);
+    }
+
+    45%,
+    55% {
+      transform: translateY(0);
+    }
+
+    99.9% {
+      transform: translateY(100%);
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+} */

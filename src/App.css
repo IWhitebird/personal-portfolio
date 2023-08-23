@@ -1,3 +1,15 @@
+
+
+.light-mode{
+  --modeColor : #000000;
+  --contactUnderline : #000000;
+}
+
+.dark-mode{
+  --modeColor : #ffffff;
+  --contactUnderline : #00ddff;
+}
+
 .App {
   text-align: center;
 }

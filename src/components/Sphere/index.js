@@ -1,11 +1,18 @@
+import {useContext, useState} from 'react';
 import DisplacementSphere from './DisplacementSphere';
+import { MyContext } from '../../MyContext';
 
-const Home = () => {
+
+const Sphere = () => {
+
+  const {mode , setMode} = useContext(MyContext);
+
+
   return (
     <div>
-        <DisplacementSphere />
+        <DisplacementSphere mode={mode} />
     </div>
   );
 };
 
-export default Home;
+export default Sphere;

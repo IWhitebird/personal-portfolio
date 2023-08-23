@@ -27,7 +27,7 @@ import './DisplacementSphere.css';
 
 const DisplacementSphere = props => {
   const colorWhite = 0xffffff;
-  const themeId ='light';
+  const themeId = props.mode;
   const start = useRef(Date.now());
   const canvasRef = useRef();
   const mouse = useRef();
@@ -46,13 +46,19 @@ const DisplacementSphere = props => {
   const windowSize = useWindowSize();
 
   useEffect(() => {
+
+    const element = canvasRef.current;
+
     const { innerWidth, innerHeight } = window;
     mouse.current = new Vector2(0.8, 0.5);
-    renderer.current = new WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: false,
-      powerPreference: 'high-performance',
-    });
+
+    console.log(element)
+      renderer.current = new WebGLRenderer({
+        canvas: element,
+        antialias: false,
+        powerPreference: 'high-performance',
+      });
+    
     renderer.current.setSize(innerWidth, innerHeight);
     renderer.current.setPixelRatio(1);
     renderer.current.outputEncoding = sRGBEncoding;
@@ -87,18 +93,19 @@ const DisplacementSphere = props => {
       cleanScene(scene.current);
       cleanRenderer(renderer.current);
     };
+
   }, []);
 
   useEffect(() => {
     const dirLight = new DirectionalLight(colorWhite, 0.6);
-    const ambientLight = new AmbientLight(colorWhite, themeId === 'light' ? 0.75 : 0.1);
+    const ambientLight = new AmbientLight(colorWhite, themeId === 'light' ? 0.8 : 0.1);
 
     dirLight.position.z = 200;
     dirLight.position.x = 100;
     dirLight.position.y = 100;
 
     lights.current = [dirLight, ambientLight];
-    scene.current.background = new Color(...rgbToThreeColor('242 242 242'));
+    scene.current.background = new Color(...rgbToThreeColor(themeId === 'light' ?'242 242 242' : '17 17 17'));
     lights.current.forEach(light => scene.current.add(light));
 
     return () => {
@@ -109,7 +116,7 @@ const DisplacementSphere = props => {
   useEffect(() => {
     const { width, height } = windowSize;
 
-    const adjustedHeight = height + height * 0.8;
+    const adjustedHeight = height + height * 0.3;
     renderer.current.setSize(width, adjustedHeight);
     camera.current.aspect = width / adjustedHeight;
     camera.current.updateProjectionMatrix();
@@ -191,6 +198,8 @@ const DisplacementSphere = props => {
       cancelAnimationFrame(animation);
     };
   }, [isInViewport, prefersReducedMotion]);
+
+
 
   return (
     <>

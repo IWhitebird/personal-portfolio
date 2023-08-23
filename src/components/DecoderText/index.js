@@ -17,12 +17,12 @@ import './index.css';
 //   ];
 
 const glyphs = [
-  'श्रे', 'ш', 'レ', '슈', '瑞',
-  'य', 'й', 'ヤ', '여', '伊',
-  'स',  'サ', '사', '萨',
-  'प', 'п', 'パ', '파', '帕',
-  'तं', 'т', 'タン', '탐', '唐',
-  'गे', 'ゲ', '게', '葛'
+  'श्रे',
+  'य', 
+  'स', 
+  'प', 
+  'तं', 
+  'गे', 
 ];
 
 const CharType = {
@@ -76,7 +76,7 @@ const DecoderText = ({
 
     if (start && !animation && !reduceMotion) {
       animation = chain(
-        delay(startDelay),
+        delay(300),
         spring({
           from: 0,
           to: content.length,
