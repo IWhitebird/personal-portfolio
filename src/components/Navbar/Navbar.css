@@ -6,7 +6,7 @@
   }
   
 
-  section {
+  .main_section {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -18,6 +18,12 @@
     background-color: var(--bg-clr);
     z-index: 40;
     margin-left: 37.5%;
+  }
+
+  @media (max-width: 768px) {
+    .main_section{
+      display: none;
+    }
   }
   
   .navbar {

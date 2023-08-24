@@ -134,15 +134,35 @@
   align-items: center;
 }
 
-.navv {
+
+.navv  {
   position: absolute; /* Changed from absolute to fixed */
   left:2%;
-  top: 3%;
+  bottom: 5%;
   background-color:var(--bar-clr);
   padding: 15px;
   transition: 0.5s;
   border-radius: 10px;
+  height: 60px;
   overflow: hidden;
+}
+
+.resume-tag{
+  left:0.5%;
+  bottom: 1.5%;
+}
+
+@media (min-width: 768px) {
+  .navv {
+    position: absolute; /* Changed from absolute to fixed */
+    left:2%;
+    top: 3%;
+  }
+  .resume-tag{
+    left:1.5%;
+    top: 10%;
+  }
+
 }
 
 .menu {

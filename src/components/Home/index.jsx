@@ -113,7 +113,7 @@ const Home = () => {
             </li>
           </div>
         </div>
-        <p class="absolute left-[2%] top-[10%] font-mono text-lg">Resume</p>
+        <p class="resume-tag absolute h-[30px] w-[80px] font-mono text-lg ">Resume</p>
       </div>
     </>
   );

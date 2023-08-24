@@ -3,6 +3,7 @@ import { RiHomeSmileFill } from "react-icons/ri";
 import { HiDocumentText } from "react-icons/hi";
 import { FaAddressCard } from "react-icons/fa";
 import { AiFillMail } from "react-icons/ai";
+import Hamburgor from "./Hamborgor";
 
 
 
@@ -32,7 +33,8 @@ const Navbar = () => {
 
   return (
     <div>
-      <section>
+      <Hamburgor />
+      <section className="main_section">
         <div className="navbar">
           <div className="nav">
             <ul>
