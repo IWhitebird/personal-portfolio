@@ -113,7 +113,7 @@ const Home = () => {
             </li>
           </div>
         </div>
-        <p class="absolute left-[5.5%] bottom-[2.5%] font-mono text-lg ">Resume</p>
+        <p class="absolute left-[2%] top-[10%] font-mono text-lg">Resume</p>
       </div>
     </>
   );
