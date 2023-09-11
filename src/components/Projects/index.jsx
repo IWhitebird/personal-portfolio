@@ -35,7 +35,7 @@ const Project = () => {
                     rel="noopener noreferrer"
                     className="hover:underline mr-4"
                   >
-                    <HiExternalLink size={30}/> 
+                    <HiExternalLink size={30} className=" transition-all duration-200 ease-in-out hover:scale-125"/> 
                   </a>
                   <a
                     href={project.gitHubUrl}
@@ -43,7 +43,7 @@ const Project = () => {
                     rel="noopener noreferrer"
                     className=" hover:underline"
                   >
-                    <FaGithub  size={30}/>
+                    <FaGithub  size={30} className=" transition-all duration-200 ease-in-out hover:scale-125"/>
                   </a>
                 </div>
 

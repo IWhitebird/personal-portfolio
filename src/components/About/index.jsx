@@ -24,7 +24,7 @@ const index = () => {
                     <p className="leading-relaxed">
                     I possess proficiency in 
                     React, Node, Express, MongoDB, Python, and also a solid grasp of C++, data structures, and algorithms for problem solving. 
-                    Currently, i am actively looking for an Full stack or backend developer internship opportunity for the Winter of 2023.
+                    Currently, i am actively looking for an Full stack or backend developer internship opportunity for the Winter of 2024.
                     </p>
 
                 </div>
