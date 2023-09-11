@@ -15,7 +15,7 @@ const index = () => {
                 </h1>
             </Zoom>
             <Fade left delay={200}>
-                <div className="font-mons text-base lg:text-2xl text-left indent-10 w-[80%]">
+                <div className="font-mons text-base lg:text-2xl text-left indent-10 w-[100%] lg:w-[80%]">
                     <p className="">
                     I am a final-year Computer Science student at the University of Mumbai, with a strong passion for impactful software development. 
                     Collaborating with like-minded peers to tackle real-world challenges is what I thrive on. I possess proficiency in 
@@ -27,7 +27,7 @@ const index = () => {
             </Fade>
           </div>
 
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-8 items-center mx-auto ">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8 items-center mx-auto ">
             {technologies.map((tech, index) => (
           <Zoom right cascade delay={200} duration={1000}>
               <div

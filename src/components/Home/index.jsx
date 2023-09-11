@@ -6,7 +6,11 @@ import { MyContext } from "../../MyContext";
 import { TypeAnimation } from "react-type-animation";
 import "./Home.css";
 import resume from "../../assets/resume-svg.svg"
-import {FiDownload , FiEye} from "react-icons/fi" 
+import {FiDownload , FiEye ,FiGithub } from "react-icons/fi" 
+import {SiLeetcode} from "react-icons/si"
+import {BiLogoLinkedin} from "react-icons/bi"
+import {RiTwitterXFill} from "react-icons/ri"
+
 
 const Home = () => {
   const [resumeModal, setResumeModal] = useState(false);
@@ -78,21 +82,30 @@ const Home = () => {
             {time}
           </div>
         </Fade>
-        <div className="theme w-full text-center text-4xl lg:text-6xl mt-[20rem] flex justify-around flex-col">
+        <div className="theme w-full text-center text-4xl lg:text-6xl mt-[10rem] sm:mt-[15rem] lg:mt-[20rem] flex flex-col ">
           <Fade left>
             <DecoderText
               delay={0}
-              className="font-mons font-extrabold leading-3 lg:mr-[16rem]"
+              className="font-mons font-black leading-3 text-4xl md:text-6xl lg:text-6xl lg:mr-[16rem]"
               text="SHREYAS PATANGE"
             />
           </Fade>
 
-          <div className={`home__titletext w-full mx-auto lg:pr-10 theme `}>
+          <div className={`home__titletext w-full mx-auto lg:pr-5 theme hidden lg:block`}>
             <p id="animtext">
               {" "}
-              <span className="font-bold">Full Stack Developer</span>{" "}
+              <span className="font-extrabold font-mons">Full Stack Developer</span>{" "}
             </p>
           </div>
+
+          <div className={`home__titletext w-full mx-auto lg:pr-5 theme lg:hidden`}>
+            <p id="animtext">
+              {" "}
+              <span className="font-extrabold font-mons text-5lg">Full Stack</span>{" "}<br/><br/>
+              <span className="font-extrabold font-mons text-5lg">Developer</span>{" "}
+            </p>
+          </div>
+
         </div>
 
         <div class="navv">
@@ -113,7 +126,32 @@ const Home = () => {
             </li>
           </div>
         </div>
-        <p class="resume-tag absolute h-[30px] w-[80px] font-mono text-lg ">Resume</p>
+
+        <p class="resume-tag absolute h-[30px] w-[80px] font-mono text-lg ">Résumé</p>
+
+
+        <div className="social absolute lg:left-[3rem] scale-75 lg:scale-100 bottom-[3rem] hidden lg:block">
+          <Fade left>
+          <div className="flex flex-row gap-7">
+            <a href="https://github.com/IWhitebird" className="social-logos">
+              <FiGithub  size={30} />
+            </a>
+
+            <a  href="https://leetcode.com/patangeshreyas/" className="social-logos">
+              <SiLeetcode  size={30} />
+            </a>
+
+            <a href="https://www.linkedin.com/in/shreyas-patange-b9b71b1b8/" className="social-logos">
+              <BiLogoLinkedin  size={30} />
+            </a>
+
+            <a  href="https://twitter.com/shreyas_patange/" className="social-logos">
+              <RiTwitterXFill  size={30} />
+            </a>
+          </div>
+          </Fade>
+        </div>
+
       </div>
     </>
   );

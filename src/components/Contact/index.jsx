@@ -19,6 +19,8 @@ const Contact = () => {
 
   return (
     <>
+
+
       <Fade left onReveal={() => setDecode(true)}> 
         
         <div className="wrapper w-[80%] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
@@ -75,8 +77,19 @@ const Contact = () => {
             </form>
 
           </div>
+
         </div>
       </Fade>
+
+      <div className="theme font-mons text-md font-bold lg:text-right lg:mr-3">
+            <Fade right>
+                <p>
+                  © 2023 Shreyas Patange. Crafted with ❤️ by IWhitebird.
+                </p>
+            </Fade>
+         </div>
+
+
     </>
   );
 };

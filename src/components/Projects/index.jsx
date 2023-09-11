@@ -14,7 +14,7 @@ const Project = () => {
 
       <div className="Projects font-mons">
         {projectsData.map((project, index) => (
-          <Fade bottom duration={2000} key={index} distance="20px">
+          <Fade top slide duration={1000} key={index} distance="100px">
             <div className="project-main flex flex-col lg:flex-row" key={index}>
 
               <div className="img-section rounded-md">
@@ -22,13 +22,13 @@ const Project = () => {
               </div>
 
               <div className="project-section">
-                <h1 className=" lg:text-5xl text-xl font-black lg:font-bold text-center mb-10 mt-4">
+                <h1 className=" lg:text-5xl text-xl font-black lg:font-bold text-center mb-3 lg:mb-10 lg:mt-4">
                   {project.name}
                 </h1>
 
-                <p className="text-lg font-bold">{project.description}</p>
+                <p className="text-sm lg:text-lg font-bold">{project.description}</p>
 
-                <div className="project-links mt-4 flex">
+                <div className="project-links mt-4 flex justify-center lg:justify-start">
                   <a
                     href={project.projectUrl}
                     target="_blank"
@@ -48,7 +48,7 @@ const Project = () => {
                 </div>
 
                 <div className="technologies mt-4">
-                  <p className="techno-color text-lg font-extrabold ">
+                  <p className="techno-color text-sm lg:text-lg font-extrabold ">
                     Technologies: {project.technologies.join(', ')}
                   </p>
                 </div>

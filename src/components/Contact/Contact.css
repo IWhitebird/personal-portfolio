@@ -13,7 +13,6 @@
 
 .formplaceholder{
     width: 100%;
-
 }
 
 .contact {
@@ -31,19 +30,6 @@
     width: auto;
 }
 
- @media screen and (max-width: 768px) {
-    .contact_heading {
-        transform: scale(1);
-        margin-left: 2rem;
-        width: 300px;
-        text-align: center;
-    }
-    .animatedhr {
-        width: 80%;
-    }
-} 
-
-
 .animatedhr {
     opacity: 0;
     margin-top: 2rem;
@@ -53,6 +39,27 @@
     border-radius: 10px;
     transition: color 1s ease;
 }
+
+
+ @media (max-width: 768px) {
+    .contact_heading {
+        transform: scale(1);
+        margin-left: 2rem;
+        width: 300px;
+        text-align: center;
+    }
+    .animatedhr {
+        width: 80%;
+    }
+    .contact {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+} 
+
+
 
 @keyframes animatedrow {
     0% {

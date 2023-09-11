@@ -19,8 +19,8 @@
   transition: color 0.3s ease-in-out;
   margin-bottom: 20px;
   margin-top: 20px;
-  font-size: 5rem;
   font-weight: 700;
+  font-size: 5rem;
 }
 
 .Projects{
@@ -32,16 +32,6 @@
   gap: 20px;
 }
 
-/* @media screen and (min-width: 768px){
-  .Projects{
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-} */
 
 .project-main{
   align-items: center;
@@ -80,4 +70,41 @@
   align-items: center; 
   margin-left: 2rem;
   border: 1px solid var(--modeColor);
+}
+
+
+
+@media (max-width: 768px){
+
+
+  .Projects{
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  .proj-head{
+    font-size: 3rem;
+  }
+  .project-section{
+    width: 100%;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    padding: 0px;
+    margin-bottom: 1rem;
+  }
+  .project-main{
+    border-radius: 20px;
+    margin-bottom: 0rem;
+    width: 90%;
+  }
+  .img-section{
+    width: 100%;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-top: 1rem;
+    padding: 0px;
+  }
 }

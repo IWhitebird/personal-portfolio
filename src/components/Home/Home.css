@@ -20,14 +20,14 @@
 
 @media (max-width: 768px) {
   .home__titletext {
-    font-size: 2.5rem;
+    font-size: 4.0rem;
   }
 }
 
 .clock {
-  position: fixed;
+  position: absolute;
   bottom: 5%;
-  left: 2%;
+  right: 2%;
   transform: translateX(-50%) translateY(-50%);
   font-size: 20px;
   letter-spacing: 7px;
@@ -136,9 +136,9 @@
 
 
 .navv  {
-  position: absolute; /* Changed from absolute to fixed */
-  left:2%;
-  bottom: 5%;
+  position: absolute;
+  left:3%;
+  bottom: 6%;
   background-color:var(--bar-clr);
   padding: 15px;
   transition: 0.5s;
@@ -154,7 +154,7 @@
 
 @media (min-width: 768px) {
   .navv {
-    position: absolute; /* Changed from absolute to fixed */
+    position: absolute; 
     left:2%;
     top: 3%;
   }
@@ -174,8 +174,9 @@
 }
 
 .navv input:checked ~ .menu {
-  width: 150px;
+  width: 100px;
 }
+
 
 .menu li {
   list-style: none;
@@ -274,3 +275,10 @@
   transform: translateY(0) rotate(45deg);
 }
 
+.social-logos{
+  transition: all 0.2s ease-in-out;
+  color: var(--modeColor);
+}
+.social-logos:hover{
+  scale: 1.3;
+}
