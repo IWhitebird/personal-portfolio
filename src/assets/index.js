@@ -11,6 +11,9 @@ import redux from "./tech/redux.png";
 import tailwind from "./tech/tailwind.png";
 import typescript from "./tech/typescript.png";
 import threejs from "./tech/threejs.svg";
+import cpp from "./tech/cpp.png";
+import python from "./tech/python.png";
+import go from "./tech/go.png";
 
 export {
     docker,
@@ -25,5 +28,8 @@ export {
     tailwind,
     typescript,
     threejs,
-    css
+    css,
+    cpp,
+    python,
+    go
   };

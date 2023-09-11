@@ -1,4 +1,7 @@
 import {
+    nodejs,
+    git,
+    threejs,
     javascript,
     typescript,
     html,
@@ -6,11 +9,11 @@ import {
     reactjs,
     redux,
     tailwind,
-    nodejs,
     mongodb,
-    git,
     docker,
-    threejs,
+    cpp,
+    python,
+    go
   } from "../assets";
 
   import {
@@ -31,6 +34,18 @@ import {
 
 
   const technologies = [
+    {
+      name: "C++",
+      icon: cpp,
+    },
+    {
+      name: "Python",
+      icon: python,
+    },
+    {
+      name: "Go",
+      icon: go,
+    },
     {
       name: "HTML 5",
       icon: html,
@@ -60,20 +75,8 @@ import {
       icon: tailwind,
     },
     {
-      name: "Node JS",
-      icon: nodejs,
-    },
-    {
       name: "MongoDB",
       icon: mongodb,
-    },
-    {
-      name: "Three JS",
-      icon: threejs,
-    },
-    {
-      name: "git",
-      icon: git,
     },
     {
       name: "docker",

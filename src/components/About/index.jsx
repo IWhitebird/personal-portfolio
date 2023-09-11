@@ -34,12 +34,12 @@ const index = () => {
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8 items-center mx-auto ">
             {technologies.map((tech, index) => (
           <Zoom right cascade delay={200} duration={1000}>
-              <div
-                key={index}
-                className="transition-all w-[60px] lg:w-[120px] duration-300 ease-in-out hover:scale-125"
-              >
-                <img src={tech.icon} className="mx-auto tech-icon" alt={tech.name} />
-              </div>
+            <div
+              key={index}
+              className="transition-all w-20 h-20 lg:w-[120px] lg:h-[120px] duration-300 ease-in-out hover:scale-125"
+            >
+              <img src={tech.icon} className="h-full object-fill mx-auto tech-icon" alt={tech.name} />
+            </div>
           </Zoom>
             ))}
         </div>
