@@ -78,7 +78,7 @@ import {
     {
       name: "docker",
       icon: docker,
-    },
+    },  
   ];
 
 

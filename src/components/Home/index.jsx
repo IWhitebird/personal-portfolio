@@ -86,7 +86,7 @@ const Home = () => {
           <Fade left>
             <DecoderText
               delay={0}
-              className="font-mons font-black leading-3 text-4xl md:text-6xl lg:text-6xl lg:mr-[16rem]"
+              className="font-mons font-extrabold leading-3 text-4xl md:text-6xl lg:text-6xl lg:mr-[16rem]"
               text="SHREYAS PATANGE"
             />
           </Fade>
