@@ -8,6 +8,7 @@
   --navIcon: #464646;
   --navText : #232323;
   --myFilter: invert(0);
+  --techno: #464646;
 }
 
 .dark-mode{
@@ -18,6 +19,7 @@
   --navIcon: #fffefe9d;
   --navText : #eaeaea;
   --myFilter: invert(0.8);
+  --techno: #eaeaea;
 }
 
 .App {

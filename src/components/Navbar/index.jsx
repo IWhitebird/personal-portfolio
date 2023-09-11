@@ -49,7 +49,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a href="#">
+                <a href="#project">
                   <div className="icon">
                     <HiDocumentText />
                   </div>

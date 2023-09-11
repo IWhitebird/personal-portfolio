@@ -10,6 +10,7 @@
     import StockAnalysis2 from "./StockAnalysis2.jpg";
     import StockAnalysis3 from "./StockAnalysis3.jpg";
     import StockAnalysis4 from "./StockAnalysis4.jpg";
+    import Silicon1 from "./Silicon1.jpg"
 
 
     export {
@@ -24,5 +25,6 @@
         StockAnalysis1,
         StockAnalysis2,
         StockAnalysis3,
-        StockAnalysis4
+        StockAnalysis4,
+        Silicon1
         };

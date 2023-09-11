@@ -25,7 +25,8 @@ import {
     StockAnalysis1,
     StockAnalysis2,
     StockAnalysis3,
-    StockAnalysis4
+    StockAnalysis4,
+    Silicon1
   } from  "../assets/images"
 
 
@@ -96,7 +97,7 @@ import {
       id: 2,
       name: "Silicon Pulse Store",
       description: "Utilizing the advanced MERN stack, we successfully established an online computer e-commerce store. Our platform offers a seamless experience for purchasing and selling high-quality computer parts, while also providing a user-friendly interface for managing orders and inventory.",
-      imageUrl: [],
+      imageUrl: [Silicon1],
       projectUrl: "url-to-project-2",
       gitHubUrl: "https://github.com/Xeonen24/Silicon-Pulse-eComApp",
       technologies: ["JavaScript" ,"MangoDB", "Express" , "React" , "NodeJs" ],
@@ -105,7 +106,7 @@ import {
       id: 3,
       name: "GeoLocationQuiz",
       description: "Created an interactive web game using ReactJs and Google Maps Street View API. The game involves guessing locations by looking at random street view images.",
-      imageUrl: [ Geo1 , Geo2],
+      imageUrl: [Geo1 , Geo2],
       projectUrl: "url-to-project-3",
       gitHubUrl: "https://github.com/IWhitebird/guess-loc",
       technologies: ["JavaScript", "ReactJs","Express", "PostgreSQL" , "3js"],
@@ -114,7 +115,7 @@ import {
       id: 4,
       name: "StudyNotion",
       description: "Developed a website parallel to Udemy, facilitating users to assume the role of instructors and devise their own courses. This platform enables student users to enroll in courses, monitor their advancement, and provide course ratings, establishing a comprehensive learning environment.",
-      imageUrl: [ EduApp1 , EduApp2 , EduApp3 , EduApp4 , EduApp5 , EduApp6],
+      imageUrl: [EduApp1 , EduApp2 , EduApp3 , EduApp4 , EduApp5 , EduApp6],
       projectUrl: "url-to-project-4",
       gitHubUrl: "https://github.com/IWhitebird/education-website-app",
       technologies: ["TypeScript","MangoDB", "Express" , "React" , "NodeJs" , "Redux"],
