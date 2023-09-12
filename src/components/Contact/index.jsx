@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import "./Contact.css";
 import DecoderText from "../DecoderText";
@@ -10,6 +10,7 @@ const Contact = () => {
   const inputText = "Say hi to me!";
   const [decode, setDecode] = useState(false);
 
+
   const autoGrow = () => {
     if (textareaRef.current.scrollHeight) {
       textareaRef.current.style.height = "70px";
@@ -19,11 +20,9 @@ const Contact = () => {
 
   return (
     <>
-
-
       <Fade left onReveal={() => setDecode(true)}> 
         
-        <div className="wrapper w-[80%] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
+        <div className="wrapper w-[80%] max-h-[20vh] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
 
           <div id="contact" className="contact">
 
@@ -33,13 +32,14 @@ const Contact = () => {
         
             <div className="animatedhr" />
         
-            <form action="POST"> 
+            <form action={`https://formspree.io/f/${process.env.REACT_APP_MAIL_KEY}`} method="POST" > 
 
               <div className="formplaceholder text-left font-mons">
                 <div class="input-field animated-element ">
                   <input
                     type="text"
                     id="email"
+                    name="email"
                     class="custom-input"
                     autoComplete="off"
                     required
@@ -54,6 +54,7 @@ const Contact = () => {
                     ref={textareaRef}
                     onInput={autoGrow}
                     id="message"
+                    name="message"
                     class="custom-input2"
                     autoComplete="off"
                     required
@@ -86,8 +87,6 @@ const Contact = () => {
                   © 2023 Shreyas Patange. Crafted with ❤️ by IWhitebird.
                 </p>
          </div>
-
-
     </>
   );
 };

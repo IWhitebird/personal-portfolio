@@ -32,6 +32,7 @@ function App() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
+
       <MyContext.Provider value={{ mode, setMode }}>
         <div
           className={`App
