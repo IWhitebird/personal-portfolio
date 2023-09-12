@@ -101,7 +101,7 @@ import {
       name: "Silicon Pulse Store",
       description: "Utilizing the advanced MERN stack, we successfully established an online computer e-commerce store. Our platform offers a seamless experience for purchasing and selling high-quality computer parts, while also providing a user-friendly interface for managing orders and inventory.",
       imageUrl: [Silicon1],
-      projectUrl: "https://silicon-pulse-e-com-app-sxp4.vercel.app/",
+      projectUrl: "https://silicon-pulse.vercel.app/",
       gitHubUrl: "https://github.com/Xeonen24/Silicon-Pulse-eComApp",
       technologies: ["JavaScript" ,"MangoDB", "Express" , "React" , "NodeJs" ],
     },
