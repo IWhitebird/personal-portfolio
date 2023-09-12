@@ -92,7 +92,7 @@ import {
       name: "Stock Analysis",
       description: "We've crafted an advanced online platform using Python's Streamlit library, enabling precise prediction and analysis of future stock trends. Our creation seamlessly showcases trending and operational stocks, merging predictive analytics with real-time market insights.",
       imageUrl: [StockAnalysis1 , StockAnalysis2 , StockAnalysis3 , StockAnalysis4],
-      projectUrl: "https://stock-analysis-app-7irz.onrender.com",
+      projectUrl: "https://stock-analysis-iwhitebird.streamlit.app/",
       gitHubUrl: "https://github.com/IWhitebird/Stock-Analysis",
       technologies: ["Html" , "Css" ,"Python", "Streamlit"],
     },
