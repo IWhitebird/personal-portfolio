@@ -89,7 +89,7 @@ import {
   const projectsData = [
     {
       id: 1,
-      name: "Stock Analysis",
+      name: "Stock Analyzer",
       description: "We've crafted an advanced online platform using Python's Streamlit library, enabling precise prediction and analysis of future stock trends. Our creation seamlessly showcases trending and operational stocks, merging predictive analytics with real-time market insights.",
       imageUrl: [StockAnalysis1 , StockAnalysis2 , StockAnalysis3 , StockAnalysis4],
       projectUrl: "https://stock-analysis-iwhitebird.streamlit.app/",
