@@ -115,7 +115,7 @@ const Home = () => {
           <img src={resume} className="resume_svg"></img>
           <div class="menu">
             <li>
-              <a href="https://drive.google.com/uc?export=download&id=1AvEH1p0-LY8QTshoE26sUb24oeuafUBo" download>
+              <a href={`https://drive.google.com/uc?export=download&id=${process.env.REACT_APP_PDF_LINK}`} download>
                 <FiDownload className=""/>
               </a>
             </li>
