@@ -22,7 +22,7 @@ const Contact = () => {
     <>
       <Fade left onReveal={() => setDecode(true)}> 
         
-        <div className="wrapper w-[80%] max-h-[20vh] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
+        <div className="wrapper w-[80%] max-h-[25vh] mx-auto lg:w-full theme transition-colors duration-300 ease-in">
 
           <div id="contact" className="contact">
 
