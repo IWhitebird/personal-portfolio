@@ -10,6 +10,7 @@ import { MyContext } from "./MyContext";
 import ModeSwitch from "./components/Navbar/ModeSwitch";
 
 function App() {
+  
   const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
 
   if (mode === "light") {
