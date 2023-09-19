@@ -82,7 +82,7 @@ const Home = () => {
             {time}
           </div>
         </Fade>
-        <div className="theme w-full text-center text-4xl lg:text-6xl mt-[10rem] sm:mt-[15rem] lg:mt-[20rem] flex flex-col ">
+        <div className="theme w-full text-center text-4xl lg:text-6xl mt-[10rem] sm:mt-[15rem] lg:mt-[15rem] flex flex-col ">
           <Fade left>
             <DecoderText
               delay={0}
