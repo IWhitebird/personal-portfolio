@@ -107,12 +107,12 @@ import {
     },
     {
       id: 3,
-      name: "GeoLocationQuiz",
-      description: "Created an interactive web game using ReactJs and Google Maps Street View API. The game involves guessing locations by looking at random street view images.",
+      name: "GeoQuiz v2",
+      description: "Created an interactive web game using ReactJs and Google Maps Street View API. The game involves guessing locations by looking at random street view images.Implemented Mutiplayer using Websockets.",
       imageUrl: [Geo1 , Geo2],
-      projectUrl: "https://geolocquiz.vercel.app",
-      gitHubUrl: "https://github.com/IWhitebird/guess-loc",
-      technologies: ["JavaScript", "ReactJs","Express", "PostgreSQL" , "3js"],
+      projectUrl: "https://guess-loc-v2.vercel.app/",
+      gitHubUrl: "https://github.com/IWhitebird/guess-loc-v2",
+      technologies: ["TypeScript", "ReactJs","Express", "Supabase", "PostgreSQL" , "3js"],
     },
     {
       id: 4,
