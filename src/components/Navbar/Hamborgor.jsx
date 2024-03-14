@@ -60,7 +60,7 @@ const Hamburgor = () => {
               <FiGithub  size={30} />
             </a>
 
-            <a  href="https://leetcode.com/patangeshreyas/" className="social-logos">
+            <a  href="https://leetcode.com/IWhitebird/" className="social-logos">
               <SiLeetcode  size={30} />
             </a>
 
