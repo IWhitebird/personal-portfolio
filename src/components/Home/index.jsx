@@ -6,7 +6,7 @@ import { MyContext } from "../../MyContext";
 import { TypeAnimation } from "react-type-animation";
 import "./Home.css";
 import resume from "../../assets/resume-svg.svg"
-import {FiDownload , FiEye ,FiGithub } from "react-icons/fi" 
+import {FiDownload , FiEye ,FiGithub } from "react-icons/fi"
 import {SiLeetcode} from "react-icons/si"
 import {BiLogoLinkedin} from "react-icons/bi"
 import {RiTwitterXFill} from "react-icons/ri"
@@ -138,7 +138,7 @@ const Home = () => {
               <FiGithub  size={30} />
             </a>
 
-            <a  href="https://leetcode.com/patangeshreyas/" className="social-logos">
+            <a  href="https://leetcode.com/IWhitebird/" className="social-logos">
               <SiLeetcode  size={30} />
             </a>
 
