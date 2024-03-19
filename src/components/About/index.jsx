@@ -20,11 +20,15 @@ const index = () => {
                     I am a final-year Computer Science student at the University of Mumbai, with a strong passion for impactful software development. 
                     Collaborating with like-minded peers to tackle real-world challenges is what I thrive on. 
                     </p>
-                
+                    <br/>
                     <p className="leading-relaxed">
                     I possess proficiency in 
-                    React, Node, Express, MongoDB, Python, and also a solid grasp of C++, data structures, and algorithms for problem solving. 
-                    Currently, i am actively looking for an Full stack or backend developer internship opportunity for the Winter of 2024.
+                    React, Node, Express, MongoDB, Go, Python, and also a solid grasp of C++, data structures, and algorithms for problem solving. 
+                    Currently, i am actively looking for an Full stack or backend developer opportunities.
+                    </p>
+                    <br/>
+                    <p>
+                      I have strong intrest in backends and distributed systems. 
                     </p>
 
                 </div>
