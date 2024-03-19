@@ -5,7 +5,7 @@
 
 .displacement-sphere {
   position: absolute;
-  z-index: -1;
+  z-index: -1000;
   top: 0;
   right: 0;
   bottom: 0;
@@ -20,7 +20,7 @@
 .displacement-sphere--entering,
 .displacement-sphere--entered {
   overflow-y: hidden;
-  animation: opacity-anim 2s var(--bezierFastoutSlowin);
+  animation: opacity-anim 4s var(--bezierFastoutSlowin);
   opacity: 1;
 }
 

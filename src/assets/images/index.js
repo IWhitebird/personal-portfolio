@@ -6,6 +6,7 @@
     import EduApp6 from "./EduApp6.jpg";
     import Geo1 from "./Geo1.jpg";
     import Geo2 from "./Geo2.jpg";
+    import Gor from "./Gor.jpg";
     import StockAnalysis1 from "./StockAnalysis1.jpg";
     import StockAnalysis2 from "./StockAnalysis2.jpg";
     import StockAnalysis3 from "./StockAnalysis3.jpg";
@@ -22,6 +23,7 @@
         EduApp6,
         Geo1,
         Geo2,
+        Gor,
         StockAnalysis1,
         StockAnalysis2,
         StockAnalysis3,
