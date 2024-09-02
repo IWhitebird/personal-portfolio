@@ -8,6 +8,7 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import { MyContext } from "./MyContext";
 import ModeSwitch from "./components/Navbar/ModeSwitch";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
 
@@ -33,7 +34,7 @@ function App() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-
+      <Analytics /> 
       <MyContext.Provider value={{ mode, setMode }}>
         <div
           className={`App
