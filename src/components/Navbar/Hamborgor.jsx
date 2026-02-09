@@ -45,6 +45,9 @@ const Hamburgor = () => {
           <a href="#">
             <li>Home</li>
           </a>
+          <a href="#experience">
+            <li>Experience</li>
+          </a>
           <a href="#project">
             <li>Projects</li>
           </a>

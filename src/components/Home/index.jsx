@@ -1,61 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-import DecoderText from "../DecoderText";
-import ResumeModal from "../Resume/ResumeModal";
-import Fade from "react-reveal/Fade";
-import { MyContext } from "../../MyContext";
+import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import DecoderText from "../DecoderText";
+import { MyContext } from "../../MyContext";
 import "./Home.css";
-import resume from "../../assets/resume-svg.svg"
-import {FiDownload , FiEye ,FiGithub } from "react-icons/fi"
-import {SiLeetcode} from "react-icons/si"
-import {BiLogoLinkedin} from "react-icons/bi"
-import {RiTwitterXFill} from "react-icons/ri"
+import resume from "../../assets/resume-svg.svg";
+import { FiDownload, FiEye, FiGithub } from "react-icons/fi";
+import { SiLeetcode } from "react-icons/si";
+import { BiLogoLinkedin } from "react-icons/bi";
+import { RiTwitterXFill } from "react-icons/ri";
+import { taglinePuns } from "../../Constants";
 
-
-const Home = () => {
-  const [resumeModal, setResumeModal] = useState(false);
-  const [time, setTime] = useState("");
-
+const Home = ({ setResumeModal }) => {
   const { mode, setMode } = useContext(MyContext);
-
-  useEffect(() => {
-    const showTime = () => {
-      const date = new Date();
-      let h = date.getHours(); // 0 - 23
-      let m = date.getMinutes(); // 0 - 59
-      let s = date.getSeconds(); // 0 - 59
-      let session = "AM";
-
-      if (h === 0) {
-        h = 12;
-      }
-
-      if (h > 12) {
-        h = h - 12;
-        session = "PM";
-      }
-
-      h = h < 10 ? "0" + h : h;
-      m = m < 10 ? "0" + m : m;
-      s = s < 10 ? "0" + s : s;
-
-      const currentTime = h + ":" + m + ":" + s + " " + session;
-      setTime(currentTime);
-    };
-
-    showTime();
-    const intervalId = setInterval(showTime, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (resumeModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [resumeModal]);
 
   const [showSpan, setShowSpan] = useState(false);
 
@@ -65,96 +22,103 @@ const Home = () => {
     }, 650);
 
     return () => {
-      clearTimeout(timeout); // Clear the timeout if the component unmounts before the timeout is reached
+      clearTimeout(timeout);
     };
   }, []);
 
   return (
-    <>
-      {resumeModal && <ResumeModal setResumeModal={setResumeModal} />}
+    <div id="content-container" className="h-[100vh] overflow-hidden theme">
+      <div className="theme w-full text-center mt-[10rem] sm:mt-[15rem] lg:mt-[15rem] flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <DecoderText
+            delay={0}
+            className="font-mons font-extrabold leading-3 text-4xl md:text-6xl lg:text-6xl"
+            text="SHREYAS PATANGE"
+          />
+        </motion.div>
 
-      <div id="content-container" className="h-[100vh] overflow-hidden theme">
-        <Fade top>
-          <div
-            id="MyClockDisplay"
-            className="clock font-mons font-bold hidden lg:block "
-          >
-            {time}
-          </div>
-        </Fade>
-        <div className="theme w-full text-center text-4xl lg:text-6xl mt-[10rem] sm:mt-[15rem] lg:mt-[15rem] flex flex-col ">
-          <Fade left>
-            <DecoderText
-              delay={0}
-              className="font-mons font-extrabold leading-3 text-4xl md:text-6xl lg:text-6xl lg:mr-[16rem]"
-              text="SHREYAS PATANGE"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <div className="home__titletext w-full mx-auto">
+            <TypeAnimation
+              sequence={["Software Engineer"]}
+              wrapper="span"
+              speed={40}
+              cursor={true}
+              repeat={0}
+              className="font-extrabold font-mons"
             />
-          </Fade>
-
-          <div className={`home__titletext w-full mx-auto lg:pr-5 theme hidden lg:block`}>
-            <p id="animtext">
-              {" "}
-              <span className="font-extrabold font-mons">Full Stack Developer</span>{" "}
-            </p>
           </div>
 
-          <div className={`home__titletext w-full mx-auto lg:pr-5 theme lg:hidden`}>
-            <p id="animtext">
-              {" "}
-              <span className="font-extrabold font-mons text-5lg">Full Stack</span>{" "}<br/><br/>
-              <span className="font-extrabold font-mons text-5lg">Developer</span>{" "}
-            </p>
+          <div className="home-tagline font-mons text-sm lg:text-base mt-3 tracking-wide">
+            <TypeAnimation
+              sequence={taglinePuns.flatMap((pun) => [pun, 2500])}
+              wrapper="span"
+              speed={40}
+              deletionSpeed={60}
+              repeat={Infinity}
+            />
           </div>
+        </motion.div>
 
-        </div>
+      </div>
 
-
-        <div class="navv">
+      <div className="resume-group">
+        <div className="navv">
           <input type="checkbox" />
           <span></span>
           <span></span>
-          <img src={resume} className="resume_svg"></img>
-          <div class="menu">
+          <img src={resume} className="resume_svg" alt="resume" />
+          <div className="menu">
             <li>
-              <a href={`https://drive.google.com/uc?export=download&id=${process.env.REACT_APP_PDF_LINK}`} download>
-                <FiDownload className=""/>
+              <a href="/Shreyas_Resume.pdf" download="Shreyas_Resume.pdf">
+                <FiDownload />
               </a>
             </li>
             <li>
-            <a href="#">
-              <FiEye onClick={() => setResumeModal(true)} />
+              <a href="#" onClick={(e) => { e.preventDefault(); setResumeModal(true); }}>
+                <FiEye />
               </a>
             </li>
           </div>
         </div>
-
-        <p class="resume-tag absolute h-[30px] w-[80px] font-mono text-lg ">Résumé</p>
-
-
-        <div className="social absolute lg:left-[3rem] scale-75 lg:scale-100 bottom-[3rem] hidden lg:block">
-          <Fade left>
-          <div className="flex flex-row gap-7">
-            <a href="https://github.com/IWhitebird" className="social-logos">
-              <FiGithub  size={30} />
-            </a>
-
-            <a  href="https://leetcode.com/IWhitebird/" className="social-logos">
-              <SiLeetcode  size={30} />
-            </a>
-
-            <a href="https://www.linkedin.com/in/shreyas-patange-b9b71b1b8/" className="social-logos">
-              <BiLogoLinkedin  size={30} />
-            </a>
-
-            <a  href="https://twitter.com/shreyas_patange/" className="social-logos">
-              <RiTwitterXFill  size={30} />
-            </a>
-          </div>
-          </Fade>
-        </div>
-
+        <p className="resume-tag font-mono">Résumé</p>
       </div>
-    </>
+
+      <motion.div
+        className="social absolute lg:left-[3rem] scale-75 lg:scale-100 bottom-[3rem] hidden lg:block"
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+      >
+        <div className="flex flex-row gap-7">
+          <a href="https://github.com/IWhitebird" className="social-logos">
+            <FiGithub size={30} />
+          </a>
+
+          <a href="https://leetcode.com/IWhitebird/" className="social-logos">
+            <SiLeetcode size={30} />
+          </a>
+
+          <a href="https://www.linkedin.com/in/shreyas-patange-b9b71b1b8/" className="social-logos">
+            <BiLogoLinkedin size={30} />
+          </a>
+
+          <a href="https://twitter.com/shreyas_patange/" className="social-logos">
+            <RiTwitterXFill size={30} />
+          </a>
+        </div>
+      </motion.div>
+
+    </div>
   );
 };
 

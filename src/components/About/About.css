@@ -1,5 +1,224 @@
+.theme {
+  color: var(--modeColor);
+}
 
+.about-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+  margin-top: 10rem;
+  margin-bottom: 14rem;
+  color: var(--navText);
+}
 
-.theme{
-    color : var(--modeColor)
+.about-head {
+  font-size: 5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.about-subtitle {
+  font-size: 1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+  margin-bottom: 3.5rem;
+}
+
+.about-content {
+  width: 80%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* Top section: bio left, cards right */
+.about-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-bio {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  opacity: 0.85;
+}
+
+.about-bio p:first-child {
+  font-size: 1.15rem;
+  opacity: 1;
+}
+
+/* Cards stack vertically in right column */
+.about-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.about-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem 1.8rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light-mode .about-card {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.about-card:hover {
+  border-color: var(--accent);
+  background: rgba(0, 221, 255, 0.04);
+  box-shadow: 0 0 30px rgba(0, 221, 255, 0.08), inset 0 0 30px rgba(0, 221, 255, 0.02);
+  transform: translateY(-3px);
+}
+
+.about-card-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.about-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.about-card-sub {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+.about-card-meta {
+  font-size: 0.78rem;
+  opacity: 0.5;
+  margin-top: 0.25rem;
+}
+
+/* Section Divider */
+.about-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  margin: 0 auto;
+  border-radius: 1px;
+}
+
+/* Skill Cloud */
+.skill-cloud {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.skill-cloud-heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.skill-category {
+  padding: 1.2rem 0;
+}
+
+.skill-category-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+  padding-left: 0.2rem;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.skill-tag {
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--modeColor);
+  cursor: default;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.light-mode .skill-tag {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.skill-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0, 221, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 221, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .about-head {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .about-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-content {
+    width: 95%;
+    gap: 2.5rem;
+  }
+
+  .about-top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-bio {
+    font-size: 1rem;
+  }
+
+  .about-bio p:first-child {
+    font-size: 1.05rem;
+  }
+
+  .about-card {
+    padding: 1.2rem 1.4rem;
+    border-radius: 12px;
+  }
+
+  .skill-tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .skill-cloud-heading {
+    font-size: 1.3rem;
+  }
 }

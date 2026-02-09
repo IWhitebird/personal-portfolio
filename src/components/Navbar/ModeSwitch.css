@@ -1,11 +1,10 @@
 .toggle {
-  --size: 1.5rem;
+  --size: 1.4rem;
   appearance: none;
   cursor: pointer;
   outline: none;
   width: var(--size);
   height: var(--size);
-  margin-top: 10px;
   box-shadow: inset calc(var(--size) * 0.33) calc(var(--size) * -0.25) 0;
   border-radius: 999px;
   z-index: 13;
@@ -14,8 +13,8 @@
 
   &:checked {
     color: var(--navText);
-    transform: scale(var(--ggs, 1.2));
-    scale: 1.2;
+    transform: scale(1);
+    scale: 1;
     background:
       linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat 5px -6px/2px 6px,
       linear-gradient(to bottom, currentColor 4px, transparent 0) no-repeat 5px 14px/2px 6px,

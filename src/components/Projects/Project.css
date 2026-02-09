@@ -6,9 +6,9 @@
     width: 100%;
     height: auto;
     padding: 0 20px;
-    margin-bottom: 20%;
+    margin-bottom: 8rem;
     color: var(--navText);
-    margin-top: 200px;
+    margin-top: 10rem;
 }
 
 .techno-color{
@@ -41,17 +41,17 @@
   margin-bottom: 50px;
   margin-top: 50px;
   gap: 20px;
-  border: 2px solid var(--navIcon);
-  border-radius: 50px;
+  border: 1px solid var(--navIcon);
+  border-radius: 24px;
   padding: 10px;
   min-height: 400px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-main:hover{
-  box-shadow: 0 0 10px 0 var(--techno);
-  scale: 1.02;
-  box-shadow: 0 0 10px 0 var(--techno);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(0, 221, 255, 0.1);
+  transform: translateY(-3px);
 }
 
 .project-section{
@@ -67,10 +67,12 @@
   width: 45%;
   height: 100%;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   margin-left: 2rem;
-  border: 1px solid var(--modeColor);
+  border: 1px solid var(--navIcon);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 

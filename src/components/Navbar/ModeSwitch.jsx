@@ -12,9 +12,10 @@ const  ModeSwitch = ({ handleClick }) => {
     <>
       <div onClick={handleClick}  
 
-      className={`cursor-pointer fixed right-[2.5rem] top-[2rem] z-100 w-[45px] h-[45px] 
-      lg:hover:scale-125 ${mode == 'light' ? 'hover:bg-[#1d1d1d42]': 'hover:bg-[#5858588b]'} 
-      transition-all duration-200 ease-in-out rounded-md z-30`}
+      className={`cursor-pointer fixed right-[1.5rem] top-[0] w-[48px] h-[48px]
+      flex items-center justify-center
+      lg:hover:scale-110
+      transition-all duration-200 ease-in-out z-[60]`}
 
       >
 

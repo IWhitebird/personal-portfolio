@@ -5,12 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 *{
   ::selection {
     color: rgb(6, 6, 5);
     background: rgb(15, 227, 220);
   }
-  scroll-behavior: smooth;
 }
 
 body {
@@ -23,29 +26,26 @@ body {
   background-color: #f2f2f2;
 }
 
-@font-face {
-  font-family: myFirstFont;
-  src: url('https://fonts.google.com/?preview.text=gotham&preview.text_type=custom');
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
+/* Smooth scroll offset for top navbar */
+[id] {
+  scroll-margin-top: 5rem;
+}
 
+*::-webkit-scrollbar {
+  width: 7px;
+}
 
+*::-webkit-scrollbar-track {
+  background: #ffffff1e;
+  border-radius: 10px;
+}
 
-  *::-webkit-scrollbar {
-    width: 7px;
-  }
-
-  *::-webkit-scrollbar-track {
-    background: #ffffff1e;
-    border-radius: 10px;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background-color: #0000007a;
-    border-radius:20px;
-  }
+*::-webkit-scrollbar-thumb {
+  background-color: #0000007a;
+  border-radius: 20px;
+}
