@@ -37,7 +37,7 @@ const Contact = () => {
 
             <div className="animatedhr" />
 
-            <form action={`https://formspree.io/f/${process.env.REACT_APP_MAIL_KEY}`} method="POST" >
+            <form action={`https://formspree.io/f/${import.meta.env.VITE_MAIL_KEY}`} method="POST" >
 
               <div className="formplaceholder text-left font-mons">
                 <div class="input-field animated-element ">
