@@ -108,11 +108,11 @@ const Home = ({ setResumeModal }) => {
             <SiLeetcode size={30} />
           </a>
 
-          <a href="https://www.linkedin.com/in/shreyas-patange" className="social-logos">
+          <a href="https://www.linkedin.com/in/shreyaspatange" className="social-logos">
             <BiLogoLinkedin size={30} />
           </a>
 
-          <a href="https://twitter.com/iguy" className="social-logos">
+          <a href="https://x.com/ifrogeee" className="social-logos">
             <RiTwitterXFill size={30} />
           </a>
         </div>

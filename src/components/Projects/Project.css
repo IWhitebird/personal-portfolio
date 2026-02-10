@@ -75,6 +75,48 @@
   overflow: hidden;
 }
 
+/* Carousel */
+.carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  object-fit: scale-down;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--navIcon);
+  opacity: 0.4;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot--active {
+  opacity: 1;
+  background: var(--accent, #00ddff);
+  transform: scale(1.3);
+}
+
 
 
 @media (max-width: 768px){

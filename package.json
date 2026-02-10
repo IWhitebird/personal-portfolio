@@ -19,7 +19,6 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-pdf": "^7.3.3",
-    "react-reveal": "^1.2.2",
     "react-transition-group": "^4.4.1",
     "react-type-animation": "^3.1.0",
     "spherethree": "npm:three@^0.122.0",
@@ -34,7 +33,9 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "postcss-nesting": "^12.0.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.3.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vite-plugin-image-optimizer": "^1.1.8"
   }
 }

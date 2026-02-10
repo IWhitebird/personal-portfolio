@@ -1,16 +1,26 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import "./App.css";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import DisplacementSphere from "./components/Sphere";
-import Contact from "./components/Contact";
-import About from "./components/About";
-import Projects from "./components/Projects";
-import Experience from "./components/Experience";
-import ResumeModal from "./components/Resume/ResumeModal";
 import { MyContext } from "./MyContext";
 import ModeSwitch from "./components/Navbar/ModeSwitch";
+import ScrollProgress from "./components/ScrollProgress";
 import { Analytics } from "@vercel/analytics/react"
+
+const Experience = lazy(() => import("./components/Experience"));
+const Projects = lazy(() => import("./components/Projects"));
+const About = lazy(() => import("./components/About"));
+const Contact = lazy(() => import("./components/Contact"));
+const ResumeModal = lazy(() => import("./components/Resume/ResumeModal"));
+
+function Spinner() {
+  return (
+    <div className="spinner-wrapper">
+      <div className="spinner" />
+    </div>
+  );
+}
 
 function App() {
 
@@ -44,16 +54,21 @@ function App() {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <Analytics />
       <MyContext.Provider value={{ mode, setMode }}>
+        <ScrollProgress />
         <div
           className={`App
       transition-colors duration-300 ease-in
       ${mode === "light" ? "light-mode" : "dark-mode"}
       `}
         >
-          {resumeModal && <ResumeModal setResumeModal={setResumeModal} />}
+          {resumeModal && (
+            <Suspense fallback={<Spinner />}>
+              <ResumeModal setResumeModal={setResumeModal} />
+            </Suspense>
+          )}
           <ModeSwitch handleClick={changeMode} />
           <DisplacementSphere />
           <Home setResumeModal={setResumeModal} />

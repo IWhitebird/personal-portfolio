@@ -1,9 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import './Project.css';
 import { projectsData } from '../../Constants';
 import { FaGithub } from 'react-icons/fa';
 import { HiExternalLink } from 'react-icons/hi';
+
+const ImageCarousel = ({ images, name }) => {
+  const [current, setCurrent] = useState(0);
+  const hasMultiple = images.length > 1;
+
+  const next = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (!hasMultiple) return;
+    const timer = setInterval(next, 4000);
+    return () => clearInterval(timer);
+  }, [hasMultiple, next]);
+
+  return (
+    <div className="carousel">
+      <div className="carousel-track" style={{ transform: `translateX(-${current * 100}%)` }}>
+        {images.map((src, i) => (
+          <img
+            key={i}
+            className="carousel-slide rounded-lg"
+            src={src}
+            alt={`${name} screenshot ${i + 1}`}
+          />
+        ))}
+      </div>
+      {hasMultiple && (
+        <div className="carousel-dots">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              className={`carousel-dot ${i === current ? "carousel-dot--active" : ""}`}
+              onClick={() => setCurrent(i)}
+              aria-label={`Go to image ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Project = () => {
   return (
@@ -29,7 +71,7 @@ const Project = () => {
             viewport={{ once: true, margin: "-50px" }}
           >
             <div className="img-section rounded-md">
-              <img className="object-scale-down rounded-lg" src={project.imageUrl[0]} alt="logo" />
+              <ImageCarousel images={project.imageUrl} name={project.name} />
             </div>
 
             <div className="project-section">
