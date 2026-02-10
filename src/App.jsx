@@ -13,6 +13,7 @@ const Projects = lazy(() => import("./components/Projects"));
 const About = lazy(() => import("./components/About"));
 const Contact = lazy(() => import("./components/Contact"));
 const ResumeModal = lazy(() => import("./components/Resume/ResumeModal"));
+const Chat = lazy(() => import("./components/Chat"));
 
 function Spinner() {
   return (
@@ -77,6 +78,7 @@ function App() {
           <About />
           <Contact />
           <Navbar setResumeModal={setResumeModal} />
+          <Chat onToggleTheme={changeMode} />
         </div>
       </MyContext.Provider>
     </Suspense>
