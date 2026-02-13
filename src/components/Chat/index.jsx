@@ -4,6 +4,7 @@ import { MyContext } from "../../MyContext";
 import useTypewriter from "../../hooks/useTypewriter";
 import useWindowSize from "../../hooks/useWindowSize";
 import usePrefersReducedMotion from "../../hooks/usePrefersReducedMotion";
+import resumePdf from "../../assets/Resume.pdf";
 import "./Chat.css";
 
 const SOCIAL_LINKS = {
@@ -33,7 +34,7 @@ const SUGGESTIONS = [
   "Show me projects",
   "Take me to experience",
   "Open GitHub profile",
-  "Download resume",
+  "View resume",
   "What skills does he have?",
   "Switch to dark mode",
   "How can I contact him?",
@@ -56,6 +57,16 @@ function stripMarkdown(text) {
     .trim();
 }
 
+const msgVariants = {
+  hidden: { opacity: 0, y: 6, filter: "blur(2px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.3, ease: "easeOut" } },
+};
+
+const actionVariants = {
+  hidden: { opacity: 0, x: -8 },
+  visible: { opacity: 0.45, x: 0, transition: { duration: 0.25, ease: "easeOut" } },
+};
+
 const TypewriterMessage = ({ text, animate, onComplete, scrollFn }) => {
   const reduceMotion = usePrefersReducedMotion();
   const { displayedText, isTyping, skipToEnd } = useTypewriter(
@@ -77,20 +88,23 @@ const TypewriterMessage = ({ text, animate, onComplete, scrollFn }) => {
   }, [displayedText, isTyping, scrollFn]);
 
   return (
-    <div
+    <motion.div
       className={`chat-msg chat-msg--assistant ${isTyping ? "chat-msg--typing" : ""}`}
       onClick={isTyping ? skipToEnd : undefined}
+      variants={msgVariants}
+      initial="hidden"
+      animate="visible"
     >
       <span className="chat-prompt-ai">$ </span>
       <span className="chat-msg-text">
         {animate ? displayedText : text}
         {isTyping && <span className="chat-block-cursor" />}
       </span>
-    </div>
+    </motion.div>
   );
 };
 
-const Chat = ({ onToggleTheme }) => {
+const Chat = ({ onSetTheme, onShowResume }) => {
   const { mode } = useContext(MyContext);
   const { width } = useWindowSize();
   const isMobile = width <= 768;
@@ -98,9 +112,9 @@ const Chat = ({ onToggleTheme }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [inputFocused, setInputFocused] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const abortRef = useRef(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -118,8 +132,9 @@ const Chat = ({ onToggleTheme }) => {
 
   useEffect(() => {
     if (isMobile && isOpen) {
+      const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      return () => { document.body.style.overflow = prev; };
     }
   }, [isMobile, isOpen]);
 
@@ -137,6 +152,13 @@ const Chat = ({ onToggleTheme }) => {
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen]);
 
+  // Auto-resize textarea to fit content
+  const autoResize = useCallback((el) => {
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 100) + "px";
+  }, []);
+
   const executeToolCall = useCallback(
     (call) => {
       switch (call.name) {
@@ -151,14 +173,22 @@ const Chat = ({ onToggleTheme }) => {
         }
         case "download_resume": {
           const a = document.createElement("a");
-          a.href = "/Shreyas_Resume.pdf";
-          a.download = "Shreyas_Resume.pdf";
+          a.href = resumePdf;
+          a.download = "Resume.pdf";
           a.click();
           return "downloading resume";
         }
-        case "toggle_theme": {
-          onToggleTheme?.();
-          return "toggled theme";
+        case "show_resume": {
+          onShowResume?.();
+          return "opened resume viewer";
+        }
+        case "set_theme": {
+          const theme = call.args.theme;
+          if (theme === "light" || theme === "dark") {
+            onSetTheme?.(theme);
+            return `switched to ${theme} mode`;
+          }
+          return null;
         }
         case "open_link": {
           const url = SOCIAL_LINKS[call.args.platform];
@@ -196,7 +226,7 @@ const Chat = ({ onToggleTheme }) => {
           return null;
       }
     },
-    [onToggleTheme]
+    [onSetTheme, onShowResume]
   );
 
   const executeToolCalls = useCallback(
@@ -225,11 +255,28 @@ const Chat = ({ onToggleTheme }) => {
       setInput("");
       setIsLoading(true);
 
+      // Reset textarea height
+      if (inputRef.current) {
+        inputRef.current.style.height = "auto";
+      }
+
+      // Abort any previous in-flight request
+      if (abortRef.current) abortRef.current.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       try {
+        // Only send user/assistant messages to Gemini (not system/action logs),
+        // and cap to last 20 messages to stay within context limits
+        const apiMessages = newMessages
+          .filter((m) => m.role === "user" || m.role === "assistant")
+          .slice(-20);
+
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: newMessages }),
+          body: JSON.stringify({ messages: apiMessages, currentTheme: mode }),
+          signal: controller.signal,
         });
 
         const data = await res.json();
@@ -258,6 +305,15 @@ const Chat = ({ onToggleTheme }) => {
             ...prev,
             { role: "assistant", content: stripMarkdown(data.text), _isNew: true },
           ]);
+        } else if (toolLogs.length > 0) {
+          // Gemini returned tool calls but no text. We MUST insert an assistant
+          // message so the conversation keeps alternating user/model roles.
+          // Without this, Gemini sees consecutive user messages and hallucinates.
+          const summary = "Done — " + toolLogs.join(", ") + ".";
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant", content: summary, _isNew: true },
+          ]);
         }
 
         if (!data.text && !data.toolCalls) {
@@ -267,15 +323,17 @@ const Chat = ({ onToggleTheme }) => {
           ]);
         }
       } catch (err) {
+        if (err.name === "AbortError") return;
         setMessages((prev) => [
           ...prev,
           { role: "system", content: `error: ${err.message}` },
         ]);
       } finally {
         setIsLoading(false);
+        abortRef.current = null;
       }
     },
-    [messages, isLoading, executeToolCalls, flushTypingFlags]
+    [messages, isLoading, executeToolCalls, flushTypingFlags, mode]
   );
 
   const handleSubmit = (e) => {
@@ -348,30 +406,58 @@ const Chat = ({ onToggleTheme }) => {
                   </svg>
                 </button>
                 <span className="chat-titlebar-text">shreyas.terminal</span>
-                <div className="chat-titlebar-shortcut">
-                  <kbd>ctrl+k</kbd>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {messages.length > 0 && (
+                    <button
+                      className="chat-close-btn"
+                      onClick={() => {
+                        if (abortRef.current) abortRef.current.abort();
+                        setMessages([]);
+                        setIsLoading(false);
+                      }}
+                      aria-label="Clear chat"
+                      title="Clear chat"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 3h6M3.5 3V2.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V3M7 3v4.75a.75.75 0 01-.75.75h-2.5a.75.75 0 01-.75-.75V3" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+                  )}
+                  <div className="chat-titlebar-shortcut">
+                    <kbd>ctrl+k</kbd>
+                  </div>
                 </div>
               </div>
 
               {/* Messages */}
-              <div className="chat-messages">
+              <div className="chat-messages" onClick={focusInput}>
                 {messages.length === 0 && (
-                  <div className="chat-welcome">
+                  <motion.div
+                    className="chat-welcome"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                  >
                     <div className="chat-welcome-text">
                       Ask me anything about Shreyas, or use the quick actions below.
                     </div>
                     <div className="chat-suggestions">
-                      {SUGGESTIONS.map((s) => (
-                        <button
+                      {SUGGESTIONS.map((s, i) => (
+                        <motion.button
                           key={s}
                           className="chat-chip"
                           onClick={() => handleSuggestion(s)}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 0.5, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.2 + i * 0.04 }}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
                         >
                           {s}
-                        </button>
+                        </motion.button>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {messages.map((msg, i) => {
@@ -389,28 +475,45 @@ const Chat = ({ onToggleTheme }) => {
 
                   if (msg.role === "system" && msg._isAction) {
                     return (
-                      <div key={i} className="chat-msg chat-msg--action">
+                      <motion.div
+                        key={i}
+                        className="chat-msg chat-msg--action"
+                        variants={actionVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
                         <span className="chat-action-arrow">&rarr;</span>
                         <span className="chat-msg-text">{msg.content}</span>
-                      </div>
+                      </motion.div>
                     );
                   }
 
                   return (
-                    <div key={i} className={`chat-msg chat-msg--${msg.role}`}>
+                    <motion.div
+                      key={i}
+                      className={`chat-msg chat-msg--${msg.role}`}
+                      variants={msgVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
                       {msg.role === "user" && (
                         <span className="chat-prompt">&gt; </span>
                       )}
                       <span className="chat-msg-text">{msg.content}</span>
-                    </div>
+                    </motion.div>
                   );
                 })}
 
                 {isLoading && (
-                  <div className="chat-msg chat-msg--assistant">
+                  <motion.div
+                    className="chat-msg chat-msg--assistant"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <span className="chat-prompt-ai">$ </span>
                     <span className="chat-block-cursor" />
-                  </div>
+                  </motion.div>
                 )}
 
                 <div ref={messagesEndRef} />
@@ -419,28 +522,26 @@ const Chat = ({ onToggleTheme }) => {
               {/* Input */}
               <form className="chat-input-row" onSubmit={handleSubmit} onClick={focusInput}>
                 <span className="chat-input-prompt">&gt;</span>
-                <div className="chat-input-display">
-                  <input
-                    ref={inputRef}
-                    className="chat-input-hidden"
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onFocus={() => setInputFocused(true)}
-                    onBlur={() => setInputFocused(false)}
-                    disabled={isLoading}
-                    autoComplete="off"
-                    spellCheck="false"
-                  />
-                  <span className="chat-input-text">
-                    {input || (!isLoading && !inputFocused && (
-                      <span className="chat-input-placeholder">ask anything...</span>
-                    ))}
-                  </span>
-                  {!isLoading && inputFocused && (
-                    <span className="chat-block-cursor chat-input-block-cursor" />
-                  )}
-                </div>
+                <textarea
+                  ref={inputRef}
+                  className="chat-input"
+                  value={input}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    autoResize(e.target);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                  placeholder="ask anything..."
+                  disabled={isLoading}
+                  autoComplete="off"
+                  spellCheck="false"
+                  rows={1}
+                />
               </form>
             </motion.div>
           </>

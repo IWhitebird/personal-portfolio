@@ -5,6 +5,7 @@ import DecoderText from "../DecoderText";
 import { MyContext } from "../../MyContext";
 import "./Home.css";
 import resume from "../../assets/resume-svg.svg";
+import resumePdf from "../../assets/Resume.pdf";
 import { FiDownload, FiEye, FiGithub } from "react-icons/fi";
 import { SiLeetcode } from "react-icons/si";
 import { BiLogoLinkedin } from "react-icons/bi";
@@ -79,7 +80,7 @@ const Home = ({ setResumeModal }) => {
           <img src={resume} className="resume_svg" alt="resume" />
           <div className="menu">
             <li>
-              <a href="/Shreyas_Resume.pdf" download="Shreyas_Resume.pdf">
+              <a href={resumePdf} download="Resume.pdf">
                 <FiDownload />
               </a>
             </li>

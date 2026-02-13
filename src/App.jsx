@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react";
+import { useEffect, useState, useCallback, Suspense, lazy } from "react";
 import "./App.css";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
@@ -54,6 +54,15 @@ function App() {
     }
   }
 
+  const handleSetTheme = useCallback((theme) => {
+    setMode(theme);
+    document.body.style.backgroundColor = theme === "light" ? "#f2f2f2" : "#111111";
+  }, []);
+
+  const handleShowResume = useCallback(() => {
+    setResumeModal(true);
+  }, []);
+
   return (
     <Suspense fallback={<Spinner />}>
       <Analytics />
@@ -78,7 +87,7 @@ function App() {
           <About />
           <Contact />
           <Navbar setResumeModal={setResumeModal} />
-          <Chat onToggleTheme={changeMode} />
+          <Chat onSetTheme={handleSetTheme} onShowResume={handleShowResume} />
         </div>
       </MyContext.Provider>
     </Suspense>

@@ -6,10 +6,11 @@ import { FiDownload, FiZoomIn, FiZoomOut } from 'react-icons/fi';
 
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import resumePdf from '../../assets/Resume.pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const RESUME_PATH = '/Shreyas_Resume.pdf';
+const RESUME_PATH = resumePdf;
 
 const ResumeModal = ({ setResumeModal }) => {
   const [numPages, setNumPages] = useState(null);
@@ -99,7 +100,7 @@ const ResumeModal = ({ setResumeModal }) => {
 
               <a
                 href={RESUME_PATH}
-                download="Shreyas_Resume.pdf"
+                download="Resume.pdf"
                 className='text-white/70 hover:text-white transition-colors'
                 title='Download'
               >

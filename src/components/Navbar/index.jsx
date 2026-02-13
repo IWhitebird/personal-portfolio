@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiDownload, FiEye } from "react-icons/fi";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import Hamburgor from "./Hamborgor";
+import resumePdf from "../../assets/Resume.pdf";
 import "./Navbar.css";
 
 const navItems = [
@@ -119,8 +120,8 @@ const Navbar = ({ setResumeModal }) => {
             >
               <span className="fixed-resume-label font-mons">Résumé</span>
               <a
-                href="/Shreyas_Resume.pdf"
-                download="Shreyas_Resume.pdf"
+                href={resumePdf}
+                download="Resume.pdf"
                 className="fixed-resume-action"
                 title="Download"
               >

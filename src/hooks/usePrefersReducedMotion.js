@@ -12,11 +12,11 @@ function usePrefersReducedMotion() {
       setReduceMotion(mediaQuery?.matches);
     };
 
-    mediaQuery?.addEventListener(handleMediaChange , ()=>{});
+    mediaQuery?.addEventListener('change', handleMediaChange);
     handleMediaChange();
 
     return () => {
-      mediaQuery?.removeEventListener(handleMediaChange , ()=>{});
+      mediaQuery?.removeEventListener('change', handleMediaChange);
     };
   }, []);
 

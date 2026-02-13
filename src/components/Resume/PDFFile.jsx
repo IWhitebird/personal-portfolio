@@ -1,4 +1,4 @@
-import Resume from "./Resume.pdf";
+import Resume from "../../assets/Resume.pdf";
 import React, { Component } from 'react';
 import { pdfjs, Document, Page } from "react-pdf";
 
