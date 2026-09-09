@@ -1,0 +1,720 @@
+{
+  "profile": {
+    "name": "Shreyas Patange",
+    "headline": "Software engineer building distributed systems and agentic AI.",
+    "location": "Mumbai, India",
+    "email": "patangeshreyas@gmail.com",
+    "siteUrl": "https://iwhitebird.com",
+    "socials": {
+      "github": "https://github.com/IWhitebird",
+      "linkedin": "https://www.linkedin.com/in/shreyaspatange",
+      "leetcode": "https://leetcode.com/IWhitebird/",
+      "x": "https://x.com/ifrogeee"
+    },
+    "availability": {
+      "status": "open",
+      "label": "Open to roles in distributed systems and AI infrastructure"
+    },
+    "taglines": [
+      "i mass, i velocity: still no momentum",
+      "writes code · AI explains it · manager takes credit",
+      "404: sleep schedule not found",
+      "copilot writes the code, i write the apology emails",
+      "git commit -m 'please work this time'",
+      "10% coding · 90% explaining why it's broken",
+      "i don't comment my code, good luck future me",
+      "merge conflicts are just love triangles between branches",
+      "my AI pair programmer hallucinates more than i do",
+      "surviving on chai and mass stack traces"
+    ],
+    "seo": {
+      "title": "Shreyas Patange | Software Engineer",
+      "description": "Software engineer at Skylark Labs building multi-region video infrastructure and agentic AI systems in Go and TypeScript."
+    },
+    "bio": [
+      "I'm a software engineer at Skylark Labs working on distributed systems and agentic AI. I built a multi-region video platform that handles thousands of concurrent live camera streams, then built an agentic layer on top of it that lets people query more than a million surveillance events in plain language.",
+      "On the infrastructure side I own the real-time pipeline: **RTSP** ingest, **FFmpeg** and **OpenCV** processing, **gRPC** service boundaries, **WebRTC** delivery, and the **Envoy** and **Maglev** routing that keeps streams pinned to nodes without hotspots. On the AI side I work in TypeScript with **Mastra**, combining hybrid retrieval, structured queries, tool calling, and memory.",
+      "Agents are only as reliable as the systems underneath them, which is why I like working on both. I do my best work on small teams with real ownership. Outside work I built **Gor**, an interpreted language in Go, and I compete on LeetCode."
+    ],
+    "resume": {
+      "path": "/resume.pdf",
+      "updatedAt": "2026-09-08"
+    }
+  },
+  "experience": [
+    {
+      "id": "skylark-labs",
+      "company": "Skylark Labs",
+      "companyUrl": "https://www.skylarklabs.ai",
+      "role": "Software Development Engineer II",
+      "start": "2025-07",
+      "end": null,
+      "bullets": [
+        "Built a **multi-region distributed system** for **RTSP/WebRTC** video ingestion, egress, and processing in **TypeScript**, **Go**, **OpenCV**, **FFmpeg**, and **gRPC**, sustaining **10K+ concurrent live streams** with real-time analytics at **sub-400ms p95** end-to-end latency.",
+        "Developed an **agentic AI platform** with **Mastra** and **TypeScript**: hybrid retrieval (metadata filtering, semantic search, structured querying), tool calling, contextual memory, and autonomous workflows, enabling natural-language analytics over **1M+** surveillance events and cutting manual review time by **60%**.",
+        "Implemented **Envoy** and **Traefik** load balancing for **gRPC** and **HTTP** services with **Maglev consistent hashing**, distributing **10K+** live streams across processing nodes and enabling **A/B deployments** on **Kubernetes** and **Docker**.",
+        "Designed a centralized **identity and access management** platform with **OAuth2**, **JWT** authentication, organization management, licensing, and fine-grained **RBAC**, serving multiple internal services and handling **100K+** auth and licensing requests monthly.",
+        "Managed **multi-region AWS infrastructure** (**Kubernetes**, **ECS**, **Lambda**, **RDS**) behind **Cloudflare global load balancing**, with **Terraform** IaC, **CI/CD** pipelines, and observability via **Prometheus**, **Grafana**, and **Loki**.",
+        "Improved reliability with **AWS SQS/SNS** distributed queues and built the real-time alerting stack (WebSockets, push, email, SMS), delivering **100K+ alerts/day** at **under 2s** median latency."
+      ]
+    },
+    {
+      "id": "heliverse-technologies",
+      "company": "Heliverse Technologies",
+      "companyUrl": "https://heliverse.com",
+      "role": "Tech Lead",
+      "start": "2023-12",
+      "end": "2025-07",
+      "bullets": [
+        "Led a team of **5 engineers**; built an **AI-powered real-time voice agent** and **WhatsApp agent** with **LangChain** and **Twilio**, handling **100+ conversations/day** through **BullMQ** workflows and automating **70%** of inquiries end to end.",
+        "Developed a **serverless microservice architecture** on **AWS Lambda** with **DynamoDB**, **TypeScript**, and **CloudFront**, deployed via the **Serverless Framework**.",
+        "Optimized frontend performance with **Next.js** **SSG/SSR** and server actions for type-safe **RPC** calls.",
+        "Architected an HR platform backend with **NestJS**, **Prisma**, and **PostgreSQL**: shift management, biometric attendance, and payroll generation for **100+ employees**, with real-time notifications via **Firebase** and **WebSockets**."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "gor",
+      "name": "Gor",
+      "summary": "A Turing-complete interpreted programming language written from scratch in Go.",
+      "description": "Full tokenizer, parser, AST, optimizer, evaluation engine, and an interactive REPL. An online playground built with **React** and **Gin** lets you write and run Gor code and inspect the AST it produces.",
+      "images": [
+        {
+          "src": "/cms/f5e3efe905da.webp",
+          "width": 1600,
+          "height": 775,
+          "alt": "The Gor playground with source on the left and the evaluated output on the right"
+        }
+      ],
+      "liveUrl": "https://gorlang.vercel.app/",
+      "githubUrl": "https://github.com/IWhitebird/Gor",
+      "tech": [
+        "Go",
+        "Gin",
+        "React"
+      ],
+      "status": "live",
+      "featured": true,
+      "order": 1,
+      "body": [
+        {
+          "type": "p",
+          "text": "Full tokenizer, parser, AST, optimizer, evaluation engine, and an interactive REPL. An online playground built with **React** and **Gin** lets you write and run Gor code and inspect the AST it produces."
+        }
+      ]
+    },
+    {
+      "id": "geoquiz",
+      "name": "GeoQuiz",
+      "summary": "Street View location-guessing game with real-time multiplayer lobbies.",
+      "description": "Built with **TypeScript**, **React**, the **Google Maps Street View API**, and **Supabase**. Multiplayer runs over Supabase's WebSocket-driven realtime streams with synchronized room state, competitive rounds, chat, reconnection handling, and deterministic scoring in **PostgreSQL** so every client agrees on the result.",
+      "images": [
+        {
+          "src": "/cms/be6b7a177496.webp",
+          "width": 1600,
+          "height": 809,
+          "alt": "GeoQuiz round in progress with a Street View panorama and the guess map"
+        },
+        {
+          "src": "/cms/4f41b53213ca.webp",
+          "width": 1600,
+          "height": 813,
+          "alt": "GeoQuiz multiplayer lobby with players and round settings"
+        }
+      ],
+      "liveUrl": "https://guess-loc-v2.vercel.app/",
+      "githubUrl": "https://github.com/IWhitebird/guess-loc-v2",
+      "tech": [
+        "TypeScript",
+        "React",
+        "Redux",
+        "Supabase",
+        "PostgreSQL",
+        "WebSockets"
+      ],
+      "status": "live",
+      "featured": true,
+      "order": 2,
+      "body": [
+        {
+          "type": "p",
+          "text": "Built with **TypeScript**, **React**, the **Google Maps Street View API**, and **Supabase**. Multiplayer runs over Supabase's WebSocket-driven realtime streams with synchronized room state, competitive rounds, chat, reconnection handling, and deterministic scoring in **PostgreSQL** so every client agrees on the result."
+        }
+      ]
+    },
+    {
+      "id": "silicon-pulse-store",
+      "name": "Silicon Pulse Store",
+      "summary": "MERN e-commerce store for PC parts with order and inventory management.",
+      "description": "Full-stack store built with **MongoDB**, **Express**, **React**, and **Node**: product catalog, cart and checkout, and an admin flow for orders and inventory.",
+      "images": [
+        {
+          "src": "/cms/bf42db41a34e.webp",
+          "width": 1600,
+          "height": 819,
+          "alt": "Silicon Pulse storefront listing computer components"
+        }
+      ],
+      "liveUrl": "https://silicon-pulse.vercel.app/",
+      "githubUrl": "https://github.com/Xeonen24/Silicon-Pulse-eComApp",
+      "tech": [
+        "JavaScript",
+        "MongoDB",
+        "Express",
+        "React",
+        "Node.js"
+      ],
+      "status": "archived",
+      "featured": false,
+      "order": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Full-stack store built with **MongoDB**, **Express**, **React**, and **Node**: product catalog, cart and checkout, and an admin flow for orders and inventory."
+        }
+      ]
+    },
+    {
+      "id": "stock-analyzer",
+      "name": "Stock Analyzer",
+      "summary": "Streamlit dashboard for stock trend analysis and prediction.",
+      "description": "**Python** and **Streamlit** app that pulls market data, surfaces trending stocks, and runs predictive models over price history.",
+      "images": [
+        {
+          "src": "/cms/67a971f486e3.webp",
+          "width": 1600,
+          "height": 780,
+          "alt": "Stock Analyzer dashboard with a price chart and prediction overlay"
+        },
+        {
+          "src": "/cms/66f3065ea769.webp",
+          "width": 1600,
+          "height": 803,
+          "alt": "Stock Analyzer trending stocks table"
+        },
+        {
+          "src": "/cms/51223fbe0caa.webp",
+          "width": 1600,
+          "height": 807,
+          "alt": "Stock Analyzer indicators view"
+        },
+        {
+          "src": "/cms/526b5ab68af2.webp",
+          "width": 1600,
+          "height": 788,
+          "alt": "Stock Analyzer model output"
+        }
+      ],
+      "liveUrl": "https://stock-analysis-iwhitebird.streamlit.app/",
+      "githubUrl": "https://github.com/IWhitebird/Stock-Analysis",
+      "tech": [
+        "Python",
+        "Streamlit"
+      ],
+      "status": "archived",
+      "featured": false,
+      "order": 4,
+      "body": [
+        {
+          "type": "p",
+          "text": "**Python** and **Streamlit** app that pulls market data, surfaces trending stocks, and runs predictive models over price history."
+        }
+      ]
+    }
+  ],
+  "skillCategories": [
+    "Languages",
+    "Frameworks & technologies",
+    "Infrastructure & DevOps",
+    "Databases",
+    "Cloud",
+    "Exposure",
+    "Concepts"
+  ],
+  "skills": [
+    {
+      "name": "TypeScript",
+      "category": "Languages",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "JavaScript",
+      "category": "Languages",
+      "highlight": false,
+      "order": 2
+    },
+    {
+      "name": "Go",
+      "category": "Languages",
+      "highlight": true,
+      "order": 3
+    },
+    {
+      "name": "Python",
+      "category": "Languages",
+      "highlight": true,
+      "order": 4
+    },
+    {
+      "name": "C/C++",
+      "category": "Languages",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "Rust",
+      "category": "Languages",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "Zig",
+      "category": "Languages",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "Bash",
+      "category": "Languages",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "SQL",
+      "category": "Languages",
+      "highlight": false,
+      "order": 9
+    },
+    {
+      "name": "React",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "Next.js",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 2
+    },
+    {
+      "name": "NestJS",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 3
+    },
+    {
+      "name": "FastAPI",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "Gin",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "Hono",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "Bun",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "GraphQL",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "gRPC",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 9
+    },
+    {
+      "name": "WebRTC",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 10
+    },
+    {
+      "name": "WebSocket",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 11
+    },
+    {
+      "name": "WebTransport",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 12
+    },
+    {
+      "name": "FFmpeg",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 13
+    },
+    {
+      "name": "NATS",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 14
+    },
+    {
+      "name": "Kafka",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 15
+    },
+    {
+      "name": "RabbitMQ",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 16
+    },
+    {
+      "name": "Temporal",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 17
+    },
+    {
+      "name": "LangChain",
+      "category": "Frameworks & technologies",
+      "highlight": false,
+      "order": 18
+    },
+    {
+      "name": "Mastra",
+      "category": "Frameworks & technologies",
+      "highlight": true,
+      "order": 19
+    },
+    {
+      "name": "Docker",
+      "category": "Infrastructure & DevOps",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "Kubernetes",
+      "category": "Infrastructure & DevOps",
+      "highlight": true,
+      "order": 2
+    },
+    {
+      "name": "Envoy",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 3
+    },
+    {
+      "name": "Traefik",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "NGINX",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "Terraform",
+      "category": "Infrastructure & DevOps",
+      "highlight": true,
+      "order": 6
+    },
+    {
+      "name": "Helm",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "Linux",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "GitHub Actions",
+      "category": "Infrastructure & DevOps",
+      "highlight": false,
+      "order": 9
+    },
+    {
+      "name": "PostgreSQL",
+      "category": "Databases",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "CockroachDB",
+      "category": "Databases",
+      "highlight": false,
+      "order": 2
+    },
+    {
+      "name": "MySQL (Vitess)",
+      "category": "Databases",
+      "highlight": false,
+      "order": 3
+    },
+    {
+      "name": "MongoDB",
+      "category": "Databases",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "DynamoDB",
+      "category": "Databases",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "ScyllaDB",
+      "category": "Databases",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "Cassandra",
+      "category": "Databases",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "Redis",
+      "category": "Databases",
+      "highlight": true,
+      "order": 8
+    },
+    {
+      "name": "AWS",
+      "category": "Cloud",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "ECS",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 2
+    },
+    {
+      "name": "Lambda",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 3
+    },
+    {
+      "name": "RDS",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "S3",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "EC2",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "Cloudflare",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "GCP",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "Firebase",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 9
+    },
+    {
+      "name": "Supabase",
+      "category": "Cloud",
+      "highlight": false,
+      "order": 10
+    },
+    {
+      "name": "Java",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 1
+    },
+    {
+      "name": "C#",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 2
+    },
+    {
+      "name": "Spring Boot",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 3
+    },
+    {
+      "name": ".NET",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "Lua",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "WASM",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "ONNX",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "ONVIF",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "NVIDIA Triton",
+      "category": "Exposure",
+      "highlight": false,
+      "order": 9
+    },
+    {
+      "name": "Distributed systems",
+      "category": "Concepts",
+      "highlight": true,
+      "order": 1
+    },
+    {
+      "name": "Consensus",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 2
+    },
+    {
+      "name": "System design",
+      "category": "Concepts",
+      "highlight": true,
+      "order": 3
+    },
+    {
+      "name": "Load balancing",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 4
+    },
+    {
+      "name": "Microservices",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 5
+    },
+    {
+      "name": "Networking",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 6
+    },
+    {
+      "name": "Operating systems",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 7
+    },
+    {
+      "name": "Databases",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 8
+    },
+    {
+      "name": "Algorithms & data structures",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 9
+    },
+    {
+      "name": "RAG",
+      "category": "Concepts",
+      "highlight": false,
+      "order": 10
+    },
+    {
+      "name": "Agentic AI",
+      "category": "Concepts",
+      "highlight": true,
+      "order": 11
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Mumbai",
+      "degree": "B.E. in Computer Science, minor in Data Science",
+      "gpa": "9.30 / 10.00",
+      "location": "Thane, Maharashtra",
+      "start": "2020-08",
+      "end": "2024-05"
+    }
+  ],
+  "achievements": [
+    {
+      "text": "LeetCode **Knight** (top 5%) with a **2000+** contest rating and **1100+** problems solved.",
+      "url": "https://leetcode.com/IWhitebird/"
+    }
+  ],
+  "posts": [],
+  "chat": {
+    "suggestions": [
+      "What is Shreyas working on right now?",
+      "Show me his projects",
+      "What's his backend stack?",
+      "Take me to his experience",
+      "Open his GitHub",
+      "View the résumé",
+      "Switch to dark mode",
+      "How do I contact him?"
+    ]
+  },
+  "meta": {
+    "syncedAt": "2026-09-09T09:06:03.354Z",
+    "source": "notion"
+  }
+}
