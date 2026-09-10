@@ -10,9 +10,10 @@ Live: https://iwhitebird.com
 - **Theme**: `next-themes` (class strategy, system default)
 - **Motion**: `motion/react` for the chat panel; `popmotion` springs for the DecoderText scramble and the sphere
 - **3D**: `spherethree` = `three@0.122` alias. The displacement sphere's shaders use 0.122 chunk names; do not bump this version without porting `src/components/sphere/*.glsl.ts`.
-- **AI assistant**: Vercel AI SDK 7 (`ai`, `@ai-sdk/react`, `@ai-sdk/groq`), model `openai/gpt-oss-120b` on Groq, optional in-Groq fallback to `openai/gpt-oss-20b`
-- **CMS**: Notion, pulled at build time by `scripts/sync-content.ts` into `src/content/site.json`
-- **Code highlighting**: `shiki` (devDependency) runs at sync time, not in the browser. Dual theme via `--shiki-light` / `--shiki-dark`.
+- **AI assistant**: Vercel AI SDK 7 (`ai`, `@ai-sdk/react`, `@ai-sdk/groq`), model `openai/gpt-oss-120b` on Groq, no fallback model
+- **CMS**: Notion, fetched at render time by `src/lib/cms/content.ts` through a cache that revalidates hourly
+- **Images**: screenshots are mirrored from Notion into **Vercel Blob** by content hash and served through `next/image`
+- **Code highlighting**: `shiki` runs on the server while content is fetched, never in the browser. Dual theme via `--shiki-light` / `--shiki-dark`.
 - **Icons**: `src/app/icon.svg` is the Newsreader "S" glyph converted to a path (self-contained, no font dependency); `apple-icon.png`, `public/logo*.png` and `public/favicon.ico` are generated from it.
 - **PDF**: `react-pdf` 10 (client-only, worker via `import.meta.url`)
 - **Package manager**: bun (`bun.lock`). Node 24 works for the scripts too.
@@ -20,52 +21,70 @@ Live: https://iwhitebird.com
 ## Content flow (single source of truth)
 ```
 Notion "Portfolio CMS" page → 7 databases (Profile, Experience, Projects, Skills, Education, Achievements, Posts)
-   │  bun scripts/sync-content.ts   (runs in `bun run build`; on any failure keeps the committed snapshot, exit 0)
-   ▼
-src/content/site.json (committed snapshot) + public/cms/*.webp + public/resume.pdf
-   ├─ src/content/index.ts      → typed accessors, zod-validated at import (src/content/schema.ts)
-   ├─ src/app/layout.tsx        → metadata, JSON-LD, OG image, sitemap, manifest
+   │                                  Google Drive (résumé PDF; share link in Notion)
+   ▼                                        ▼
+src/lib/cms/content.ts  getContent()   src/lib/cms/resume.ts  getResumePdf()
+   'use cache: remote' · cacheLife("cms") · cacheTag("cms") · zod-validated
+   │  mirrors new screenshots into Vercel Blob (src/lib/cms/blob.ts)
+   ├─ src/lib/cms/select.ts     → pure selectors over the fetched object
+   ├─ every page, generateMetadata, sitemap, robots, manifest, OG images, RSS
+   ├─ src/app/resume.pdf/route.ts → the PDF, same-origin
    └─ src/lib/knowledge.ts      → compact facts for the AI system prompt + data behind the get_* tools
 ```
-- Editing content = edit Notion, then trigger a Vercel deploy (Deploy Hook). `bun run content:sync` pulls locally.
-- `scripts/seed-notion.ts` creates the databases from `site.json` once (uploads screenshots + résumé). Property names it creates are the ones `sync-content.ts` asserts on.
-- **Posts** is optional in the sync (a CMS without it still syncs) and is seeded empty: the blog is written in Notion, never from the snapshot. `Published` gates it; an unchecked post never reaches the site. There is a "Block reference (keep unpublished)" page in the Posts database showing every supported block.
-- Post bodies are flattened by `scripts/lib/blocks.ts` into the subset `PostBlockSchema` allows: p, h2, h3 (both get anchor slugs), ul, ol, todo, quote, callout, code (highlighted by `scripts/lib/highlight.ts`), image, bookmark, hr. Nesting is followed two levels deep and stored as a `depth` on list items, so the schema stays non-recursive. Anything else in Notion is skipped rather than breaking the build.
+- **Nothing about content is committed.** No snapshot, no images, no PDF. `NOTION_TOKEN` is a runtime dependency, not just a build one.
+- **Editing content = edit Notion.** The `cms` cacheLife profile is `stale 300 / revalidate 3600 / expire 2592000`, so an edit is live within the hour; a redeploy publishes it at once. Worst case is about two hours, because a page's revalidate window and the content entry's window run on independent clocks. The month-long `expire` is deliberate: if Notion is unreachable at regeneration the last good snapshot keeps serving instead of the site going blank.
+- `'use cache: remote'` (not plain `'use cache'`) is required: plain is in-memory per instance, so every cold function would refetch Notion. `remote` puts the entry in Vercel's Runtime Cache, shared across instances and the build.
+- **A connected Vercel Blob store is mandatory**, in every environment including local dev. `assertBlob()` throws a one-line instruction rather than falling back, because a fallback would mean rendering Notion's expiring URLs. Blob names are `cms/<sha1-12 of the Notion S3 path>_<w>x<h>.<ext>`: dimensions ride in the name so `next/image` needs no second lookup, and one `list()` per regeneration decides what to upload. Blobs are immutable and never pruned.
+- The **résumé PDF is never in the repo.** It lives in the owner's public Google Drive folder; the share link sits in Notion on `Profile` → `Resume URL`. `getResumePdf()` rewrites it to its direct-download form (`directDownloadUrl`), refuses anything not starting `%PDF-` (what a not-yet-shared Drive file returns), and `/resume.pdf` streams the bytes same-origin, which is what lets react-pdf load it without CORS. Updating the résumé means replacing the file in Drive. Code never changes for it.
+- **Posts** is optional in the fetch (a CMS without it still works) and is seeded empty: the blog is written in Notion. `Published` gates it; an unchecked post never reaches the site. There is a "Block reference (keep unpublished)" page in the Posts database showing every supported block.
+- Post bodies are flattened by `src/lib/cms/blocks.ts` into the subset `PostBlockSchema` allows: p, h2, h3 (both get anchor slugs), ul, ol, todo, quote, callout, code (highlighted by `src/lib/cms/highlight.ts`), image, bookmark, hr. Nesting is followed two levels deep and stored as a `depth` on list items, so the schema stays non-recursive. Anything else in Notion is skipped rather than breaking the fetch.
+- Property names are asserted by `assertProps` in `content.ts`. A rename in Notion aborts the regeneration loudly instead of silently dropping a field, and the stale entry keeps serving.
 - Projects carry an **Alt Text** property, one line per screenshot in order. Notion filenames make useless alt text, so this is the source for it.
 - A project's Notion **page body is its case study** at `/projects/[slug]` (slug = the project id), converted with the same block pipeline as posts. The first paragraph doubles as the card copy on the home page. An empty body falls back to that paragraph, so a project with no write-up still gets a page.
 - `Status` (Live / WIP / Archived) renders as a quiet marker on cards and case studies via `ProjectStatus`. Archived is muted; WIP takes the accent because it is a live-state signal.
-- Skills come back sorted by category order then row order, because `Order` restarts inside each category in Notion. Keeps the snapshot diff stable.
+- Skills come back sorted by category order then row order, because `Order` restarts inside each category in Notion.
 - Inline markdown subset in content strings: `**bold**`, `` `code` ``, `[text](url)`; rendered by `src/components/ui/InlineMd.tsx`.
-- Screenshots referenced in `site.json` carry `width`/`height` for `next/image`.
+
+## Cache Components
+`cacheComponents: true` is on, which changes the rules:
+- **Incompatible segment configs**: `runtime`, `dynamic`, `dynamicParams`, `revalidate`, `fetchCache`. None are used. Node is the default runtime in Next 16, so `export const runtime = "nodejs"` is not just unnecessary, it fails the build.
+- **`generateStaticParams` must return at least one param.** `slugParams()` in `select.ts` returns `[{ slug: "__placeholder__" }]` for an empty list; the page's existing `if (!post) notFound()` turns it into a 404. Slugs that appear mid-hour still render on request.
+- **Static `metadata` and `alt` exports cannot read content**, so `layout.tsx`, `blog/page.tsx` and `resume/page.tsx` use `generateMetadata`, and the root `opengraph-image.tsx` uses `generateImageMetadata` for its `alt`.
+- **Reading the clock during a prerender is an error** (`Date.now()`, zero-argument `new Date()`, `Math.random()` in a Server Component). `content.meta.fetchedAt` is the server's "now": `Footer` takes a `year` prop and `formatDuration` takes a required `now`. Client effects are unaffected.
+- `"use cache"` cannot decorate a route handler's `GET` export; the handler calls a cached helper instead.
 
 ## Layout
 ```
 src/
-├── app/                 layout, page (composes sections), api/chat/route.ts, blog/{page,[slug],rss.xml}, projects/[slug], resume/, metadata routes
+├── app/                 layout, page (composes sections), api/chat/route.ts, resume.pdf/route.ts,
+│                        blog/{page,[slug],rss.xml}, projects/[slug], resume/, metadata routes
 ├── components/
 │   ├── sections/        Hero, Experience, Projects, About, Contact, Footer
 │   ├── nav/             TopNav (glass bar on scroll, active section), SectionLink (smooth anchor scroll), ThemeToggle, Clock (IST)
 │   ├── chat/            ChatLauncher (FAB + panel), Chat (useChat), MessageParts, useClientTools, persist
-│   ├── blog/            PostBody (renders the synced block subset), TableOfContents
+│   ├── blog/            PostBody (renders the fetched block subset), TableOfContents
 │   ├── providers/       ThemeProvider
 │   ├── sphere/          DisplacementSphere (client, transparent canvas), SphereBackground (idle-mounted), shaders
 │   ├── resume/          ResumeViewer, ResumeModal, ResumeHost (event-driven), ResumeStandalone (/resume page)
 │   └── ui/              DecoderText, InlineMd, JsonLd, ProjectStatus, ScrollProgress, SectionHeading, TrackedLink, VisuallyHidden
-├── content/             schema.ts (zod), site.json (snapshot), index.ts (accessors)
-├── lib/                 site.ts (origin), seo.ts (JSON-LD graphs), knowledge.ts, format.ts, events.ts,
-│                        three.ts, scroll.ts, analytics.ts, chat/{prompt,tools,page-tools,model,guard}.ts
+├── lib/
+│   ├── cms/             content.ts (getContent), select.ts, blob.ts, resume.ts (getResumePdf),
+│   │                    schema.ts (zod + types), notion.ts, blocks.ts, richtext.ts, highlight.ts
+│   ├── site.ts (origin), resume.ts (path + download filename), seo.ts (JSON-LD graphs),
+│   └── knowledge.ts, format.ts, events.ts, three.ts, scroll.ts, analytics.ts,
+│                        chat/{prompt,tools,page-tools,model,guard}.ts
 └── hooks/               usePrefersReducedMotion, useInViewport, useWindowSize, useRotatingText
-scripts/                 sync-content.ts, seed-notion.ts, lib/{notion,richtext,assets,blocks,highlight}.ts
 ```
 
 ## Client/server boundary
-- `src/content/index.ts` reaches `site.json`, and `lib/knowledge.ts` and `lib/chat/tools.ts` reach `src/content`. **A client component must never value-import any of them**: doing so bundles the entire CMS snapshot into the browser (it did, once, for 570 KB). `import type` is fine because it is erased.
+- `lib/cms/content.ts`, `lib/cms/resume.ts`, `lib/cms/blob.ts`, `lib/knowledge.ts` and `lib/chat/tools.ts` start with `import "server-only"`, so a client component that value-imports one fails the build instead of shipping the CMS to the browser (it did, once, for 570 KB). `lib/cms/schema.ts` is types and zod only, safe to `import type` from anywhere; `lib/resume.ts` is two constants shared by both sides.
+- Server components fetch once at the top of a route and pass plain data down as props. `lib/cms/select.ts` is pure and takes the fetched object.
 - The browser gets its half of the tool contract from `lib/chat/page-tools.ts`, which deliberately has no imports. `tools.ts` re-exports it as `PAGE_TOOL_NAMES` with a `satisfies readonly ToolName[]` so a typo still fails the build.
-- Guard against regressions with `grep -rl "<a string from site.json>" .next/static` after a build.
+- Guard against regressions with `grep -rl "<a bullet from Notion>" .next/static` after a build.
 
 ## AI assistant
-- `POST /api/chat` (Node runtime, `maxDuration` 30): origin allowlist → zod body caps (20 msgs / 2000 chars per part / 8000 total) → per-IP rate limit (in-memory, or Upstash when `UPSTASH_*` is set) → last 10 UI messages → `streamText` with `stopWhen: isStepCount(3)`, `maxOutputTokens` 500, `reasoningEffort: "low"`.
-- Server tools (`execute`): `search_content` (grounding: every mention of a term across the content, with source), `get_experience`, `get_projects`, `get_skills`, `get_contact_info`, all reading `site.json`. The prompt tells the model to search first whenever a question names something specific; before that tool existed it answered "what did he build with Mastra?" with the wrong project. Everything the assistant knows comes from Notion, and there are deliberately no live third-party lookups: they add a key to rotate, a rate limit to babysit, and a failure mode, to restate something the content already says.
+- `POST /api/chat` (`maxDuration` 30): origin allowlist → zod body caps (20 msgs / 2000 chars per part / 8000 total) → per-IP rate limit (in-memory, or Upstash when `UPSTASH_*` is set) → last 10 UI messages → `streamText` with `stopWhen: isStepCount(3)`, `maxOutputTokens` 500, `reasoningEffort: "low"`.
+- Server tools (`execute`): `search_content` (grounding: every mention of a term across the content, with source), `get_experience`, `get_projects`, `get_skills`, `get_contact_info`. The route awaits `getContent()` once and `buildTools(content)` closes over it, so a request costs one cache read and no Notion calls. The prompt tells the model to search first whenever a question names something specific; before that tool existed it answered "what did he build with Mastra?" with the wrong project. Everything the assistant knows comes from Notion, and there are deliberately no live third-party lookups: they add a key to rotate, a rate limit to babysit, and a failure mode, to restate something the content already says.
 - Page tools (no `execute`, run in the browser via `onToolCall` + `addToolOutput`): `navigate_to_section`, `set_theme`, `show_resume`, `download_resume`, `open_link`, `open_project`, `focus_contact_form`. Custom `sendAutomaticallyWhen` only resends when the model acted silently.
 - Groq free tier is ~8K tokens/minute org-wide: keep `buildInstructions()` under ~700 tokens and tool descriptions terse; detail belongs behind tools.
 - Rate-limit and quota errors come back as normal assistant text ("try again in N seconds"); the UI shows a countdown.
@@ -74,17 +93,16 @@ scripts/                 sync-content.ts, seed-notion.ts, lib/{notion,richtext,a
 - Loose coupling via `src/lib/events.ts` (`portfolio:open-chat`, `portfolio:show-resume`).
 
 ## Copy rules
-- The site is read by recruiters, not by developers. Never surface build or CMS plumbing in the UI: no "synced from Notion", no "not configured", no "the site was rebuilt". `meta.syncedAt` is for the sitemap's `lastModified`, not for the footer.
+- The site is read by recruiters, not by developers. Never surface build or CMS plumbing in the UI: no "synced from Notion", no "not configured", no "the site was rebuilt". `meta.fetchedAt` is for the sitemap's `lastModified` and the footer's year, never shown as a timestamp.
 - A section heading matches what the nav calls it, so "Projects" in the nav means "Projects" as the heading.
 
 ## Environment variables (see `.env.example`)
-`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_FORMSPREE_ID`, `GROQ_API_KEY`, `NOTION_TOKEN`, `NOTION_ROOT_PAGE_ID`; optional `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CHAT_FALLBACK_MODEL` (empty string disables the fallback), `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`.
+Required: `NEXT_PUBLIC_SITE_URL` (throws at import if unset), `NEXT_PUBLIC_FORMSPREE_ID`, `GROQ_API_KEY`, `NOTION_TOKEN`, `NOTION_ROOT_PAGE_ID`. Optional: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`. Only `NEXT_PUBLIC_*` reaches the browser. `BLOB_STORE_ID` / `BLOB_READ_WRITE_TOKEN` and `VERCEL*` are injected by Vercel (`vercel env pull` locally), never set by hand.
 
 ## Scripts
 - `bun dev`: dev server (port 3000)
-- `bun run build`: Notion sync (soft-fails to snapshot) + `next build`
+- `bun run build`: `next build`
 - `bun run typecheck` / `bun run lint`
-- `bun run content:sync` (`:strict` exits 1 on failure) · `bun run content:seed`
 
 ## Analytics
 - Vercel Analytics + Speed Insights load only on Vercel. Custom events go through `src/lib/analytics.ts`, which no-ops when `NEXT_PUBLIC_VERCEL_ENV` is unset so local clicks never reach the dashboard. Adding an event means adding it to the `AnalyticsEvent` union.
@@ -110,4 +128,4 @@ scripts/                 sync-content.ts, seed-notion.ts, lib/{notion,richtext,a
 
 ## Workflow
 - Work on a feature branch; the owner reviews and commits. Do not commit or push from an agent session.
-- After content edits in Notion, the deploy hook (or a push) rebuilds the site.
+- No `vercel.json`: bun is detected from `bun.lock` and `next build` is Vercel's default. A Blob store must be connected to the project for every environment.

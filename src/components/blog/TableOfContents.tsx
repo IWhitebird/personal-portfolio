@@ -1,4 +1,4 @@
-import type { PostBlock } from "@/content/schema";
+import type { PostBlock } from "@/lib/cms/schema";
 
 const MIN_HEADINGS = 3;
 

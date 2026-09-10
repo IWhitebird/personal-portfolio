@@ -5,30 +5,36 @@ import { Footer } from "@/components/sections/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Projects } from "@/components/sections/Projects";
 import { SphereBackground } from "@/components/sphere/SphereBackground";
-import {
-  achievements,
-  education,
-  experience,
-  featuredProjects,
-  otherProjects,
-  posts,
-  profile,
-  skillsByCategory,
-  socialLinks,
-} from "@/content";
+import { getContent } from "@/lib/cms/content";
+import { RESUME_PATH } from "@/lib/resume";
+import { featuredProjects, otherProjects, skillsByCategory, socialLinks } from "@/lib/cms/select";
 
-export default function HomePage() {
-  const socials = socialLinks();
+export default async function HomePage() {
+  const content = await getContent();
+  const { profile } = content;
+  const socials = socialLinks(content);
+  const now = new Date(content.meta.fetchedAt);
 
   return (
     <main id="main">
       <SphereBackground />
-      <Hero profile={profile} socials={socials} />
-      <Experience items={experience} />
-      <Projects featured={featuredProjects()} others={otherProjects()} />
-      <About profile={profile} education={education} achievements={achievements} skillGroups={skillsByCategory()} />
+      <Hero profile={profile} resumePath={RESUME_PATH} socials={socials} />
+      <Experience items={content.experience} now={now} />
+      <Projects featured={featuredProjects(content)} others={otherProjects(content)} />
+      <About
+        profile={profile}
+        education={content.education}
+        achievements={content.achievements}
+        skillGroups={skillsByCategory(content)}
+      />
       <Contact profile={profile} socials={socials} formspreeId={process.env.NEXT_PUBLIC_FORMSPREE_ID} />
-      <Footer name={profile.name} email={profile.email} resumePath={profile.resume.path} showBlog={posts().length > 0} />
+      <Footer
+        name={profile.name}
+        email={profile.email}
+        resumePath={RESUME_PATH}
+        showBlog={content.posts.length > 0}
+        year={now.getFullYear()}
+      />
     </main>
   );
 }

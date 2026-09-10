@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { EVENTS, emit } from "@/lib/events";
 import { scrollToSection } from "@/lib/scroll";
 import { isPageTool, SECTIONS, type SectionId } from "@/lib/chat/page-tools";
-import type { SocialKey } from "@/content";
+import type { SocialKey } from "@/lib/cms/schema";
 
 export type ProjectLink = { name: string; liveUrl?: string; githubUrl?: string };
 

@@ -1,32 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- Notion's response unions are deep; the sync reads a handful of fields */
+/* eslint-disable @typescript-eslint/no-explicit-any -- Notion's response unions are deep; only a handful of fields are read */
 import { Client } from "@notionhq/client";
 
 export const DATABASE_TITLES = ["Profile", "Experience", "Projects", "Skills", "Education", "Achievements", "Posts"] as const;
 export type DatabaseTitle = (typeof DATABASE_TITLES)[number];
 
-const MIN_SPACING_MS = 350; // Notion allows ~3 requests/second on average
-let lastCall = 0;
+// Notion allows roughly 3 requests/second. Three in flight keeps a regeneration
+// fast without tripping the limit; a 429 is retried once with its Retry-After.
+const MAX_IN_FLIGHT = 3;
+let inFlight = 0;
+const queue: (() => void)[] = [];
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function acquire(): Promise<void> {
+  if (inFlight < MAX_IN_FLIGHT) {
+    inFlight += 1;
+    return;
+  }
+  await new Promise<void>((resolve) => queue.push(resolve));
+  inFlight += 1;
+}
+
+function release(): void {
+  inFlight -= 1;
+  queue.shift()?.();
+}
 
 export function createNotion(token: string): Client {
   return new Client({ auth: token });
 }
 
-/** Serialises calls with a minimum spacing and retries once on 429 using Retry-After. */
 export async function call<T>(fn: () => Promise<T>, label = "notion"): Promise<T> {
-  const wait = lastCall + MIN_SPACING_MS - Date.now();
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-  lastCall = Date.now();
+  await acquire();
   try {
-    return await fn();
-  } catch (err: any) {
-    if (err?.status === 429 || err?.code === "rate_limited") {
+    try {
+      return await fn();
+    } catch (err: any) {
+      if (err?.status !== 429 && err?.code !== "rate_limited") throw err;
       const retry = Number(err?.headers?.["retry-after"] ?? 2);
-      console.warn(`[${label}] rate limited, retrying in ${retry}s`);
-      await new Promise((r) => setTimeout(r, retry * 1000));
-      lastCall = Date.now();
+      console.warn(`[cms] ${label} rate limited, retrying in ${retry}s`);
+      await sleep(retry * 1000);
       return await fn();
     }
-    throw err;
+  } finally {
+    release();
   }
 }
 
@@ -62,7 +79,7 @@ export async function discoverDatabases(notion: Client, rootPageId: string): Pro
   return found;
 }
 
-/** Fails loudly when a property was renamed in Notion so the snapshot is kept instead of silently losing a field. */
+/** Fails loudly when a property was renamed in Notion, so a regeneration aborts instead of silently losing a field. */
 export function assertProps(db: DiscoveredDatabase, required: string[]): void {
   const missing = required.filter((name) => !(name in db.properties));
   if (missing.length) {

@@ -5,22 +5,21 @@ import { notFound } from "next/navigation";
 import { PostBody } from "@/components/blog/PostBody";
 import { TableOfContents, hasOutline } from "@/components/blog/TableOfContents";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { postBySlug, posts } from "@/content";
+import { getContent } from "@/lib/cms/content";
+import { postBySlug, posts, slugParams } from "@/lib/cms/select";
 import { formatPostDate } from "@/lib/format";
 import { postGraph } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return posts().map(({ slug }) => ({ slug }));
+export async function generateStaticParams() {
+  const content = await getContent();
+  return slugParams(content.posts.map((p) => p.slug));
 }
 
-/** Every post is known at build time, so an unknown slug is a 404 rather than a render. */
-export const dynamicParams = false;
-
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const post = postBySlug((await params).slug);
+  const post = postBySlug(await getContent(), (await params).slug);
   if (!post) return {};
   const path = `/blog/${post.slug}`;
 
@@ -45,10 +44,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PostPage({ params }: Params) {
   const { slug } = await params;
-  const post = postBySlug(slug);
+  const content = await getContent();
+  const post = postBySlug(content, slug);
   if (!post) notFound();
 
-  const all = posts();
+  const all = posts(content);
   const index = all.findIndex((p) => p.slug === slug);
   const newer = index > 0 ? all[index - 1] : undefined;
   const older = index < all.length - 1 ? all[index + 1] : undefined;
@@ -142,7 +142,7 @@ export default async function PostPage({ params }: Params) {
         </aside>
       </div>
 
-      <JsonLd data={postGraph(post)} />
+      <JsonLd data={postGraph(content.profile, post)} />
     </main>
   );
 }

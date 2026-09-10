@@ -7,8 +7,9 @@ import { DecoderText } from "@/components/ui/DecoderText";
 import { useRotatingText } from "@/hooks/useRotatingText";
 import { track } from "@/lib/analytics";
 import { EVENTS, emit } from "@/lib/events";
-import type { Profile } from "@/content/schema";
-import type { SocialKey } from "@/content";
+import type { Profile } from "@/lib/cms/schema";
+import { RESUME_FILENAME } from "@/lib/resume";
+import type { SocialKey } from "@/lib/cms/schema";
 
 const SOCIAL_ICONS: Record<SocialKey, IconType> = {
   github: FiGithub,
@@ -19,10 +20,11 @@ const SOCIAL_ICONS: Record<SocialKey, IconType> = {
 
 type Props = {
   profile: Profile;
+  resumePath: string;
   socials: { key: SocialKey; label: string; href: string }[];
 };
 
-export function Hero({ profile, socials }: Props) {
+export function Hero({ profile, resumePath, socials }: Props) {
   const tagline = useRotatingText(profile.taglines);
   const isOpen = profile.availability.status !== "not-looking";
 
@@ -64,8 +66,8 @@ export function Hero({ profile, socials }: Props) {
           </button>
           <a
             className="btn-ghost"
-            href={profile.resume.path}
-            download="Shreyas_Patange_Resume.pdf"
+            href={resumePath}
+            download={RESUME_FILENAME}
             onClick={() => track("resume_download", { from: "hero" })}
           >
             <FiDownload size={15} />

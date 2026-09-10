@@ -1,12 +1,18 @@
 import { ImageResponse } from "next/og";
-import { experience, profile } from "@/content";
+import { getContent } from "@/lib/cms/content";
 import { siteHost } from "@/lib/site";
 
-export const alt = `${profile.name}: ${profile.headline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+/** `alt` comes from the CMS, so it is generated rather than a static export. */
+export async function generateImageMetadata() {
+  const { profile } = await getContent();
+  return [{ id: "og", alt: `${profile.name}: ${profile.headline}`, size, contentType }];
+}
+
+export default async function OpenGraphImage() {
+  const { profile, experience } = await getContent();
   const current = experience.find((e) => e.end === null);
 
   return new ImageResponse(

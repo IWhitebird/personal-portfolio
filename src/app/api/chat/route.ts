@@ -9,12 +9,12 @@ import {
   toUIMessageStream,
 } from "ai";
 import { z } from "zod";
+import { getContent } from "@/lib/cms/content";
 import { BodySchema, checkOrigin, clientIp, rateLimit } from "@/lib/chat/guard";
-import { chatModel, isQuotaError, retryAfterSeconds, type ModelUsage } from "@/lib/chat/model";
+import { PRIMARY_MODEL, chatModel, isQuotaError, retryAfterSeconds } from "@/lib/chat/model";
 import { buildInstructions } from "@/lib/chat/prompt";
-import { tools, type ChatMessage } from "@/lib/chat/tools";
+import { buildTools, type ChatMessage } from "@/lib/chat/tools";
 
-export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const HISTORY_LIMIT = 10;
@@ -88,14 +88,14 @@ export async function POST(req: Request) {
     return json({ error: "The conversation history is malformed. Clear the chat and try again." }, 400);
   }
 
-  const usage: ModelUsage = { id: "", fellBack: false };
+  const content = await getContent();
   const started = Date.now();
 
   const result = streamText({
-    model: chatModel(usage),
-    instructions: buildInstructions(body.theme ?? "dark"),
+    model: chatModel(),
+    instructions: buildInstructions(content, body.theme ?? "dark"),
     messages: modelMessages,
-    tools,
+    tools: buildTools(content),
     stopWhen: isStepCount(MAX_STEPS),
     maxOutputTokens: 500,
     maxRetries: 0,
@@ -108,8 +108,7 @@ export async function POST(req: Request) {
       console.info(
         "[chat]",
         JSON.stringify({
-          model: usage.id,
-          fellBack: usage.fellBack,
+          model: PRIMARY_MODEL,
           steps: steps.length,
           tools: steps.flatMap((s) => s.toolCalls.map((t) => t.toolName)),
           tokens: totalUsage.totalTokens,

@@ -19,8 +19,12 @@ export function formatRange(start: string, end: string | null): string {
   return `${formatMonth(start)} – ${end ? formatMonth(end) : "Present"}`;
 }
 
-/** Whole-month duration as "1 yr 2 mo" / "8 mo". `end` null means today. */
-export function formatDuration(start: string, end: string | null, now = new Date()): string {
+/**
+ * Whole-month duration as "1 yr 2 mo" / "8 mo". `end` null means `now`, which
+ * the caller must pass: reading the clock during a prerender is not allowed, so
+ * server renders measure against the content's fetch time.
+ */
+export function formatDuration(start: string, end: string | null, now: Date): string {
   const from = dateParts(start);
   const to = end ? dateParts(end) : { year: now.getFullYear(), month: now.getMonth() + 1, day: 1 };
   const months = Math.max(1, (to.year - from.year) * 12 + (to.month - from.month) + 1);

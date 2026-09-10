@@ -4,8 +4,8 @@ import { useRef, useState, type FormEvent } from "react";
 import { DecoderText } from "@/components/ui/DecoderText";
 import { useInViewport } from "@/hooks/useInViewport";
 import { track } from "@/lib/analytics";
-import type { Profile } from "@/content/schema";
-import type { SocialKey } from "@/content";
+import type { Profile } from "@/lib/cms/schema";
+import type { SocialKey } from "@/lib/cms/schema";
 
 type Props = {
   profile: Profile;

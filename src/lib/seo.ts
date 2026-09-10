@@ -1,5 +1,5 @@
-import { achievements, education, experience, profile, site, socialLinks } from "@/content";
-import type { Post, Project } from "@/content/schema";
+import type { Post, Profile, Project, SiteContent } from "@/lib/cms/schema";
+import { socialLinks } from "@/lib/cms/select";
 import { absolute, siteUrl } from "./site";
 
 const PERSON = `${siteUrl}/#person`;
@@ -12,7 +12,8 @@ const person = () => ({ "@id": PERSON });
  * One `@graph` per page rather than several loose blocks, so Google resolves
  * Person, WebSite and the page node to the same entities across the site.
  */
-export function homeGraph() {
+export function homeGraph(content: SiteContent) {
+  const { profile, experience, education, achievements, skills } = content;
   const current = experience.find((e) => e.end === null) ?? experience[0];
 
   return {
@@ -27,9 +28,9 @@ export function homeGraph() {
         jobTitle: current?.role,
         worksFor: current ? { "@type": "Organization", name: current.company, url: current.companyUrl } : undefined,
         alumniOf: education.map((e) => ({ "@type": "EducationalOrganization", name: e.institution })),
-        knowsAbout: site.skills.filter((s) => s.highlight).map((s) => s.name),
+        knowsAbout: skills.filter((s) => s.highlight).map((s) => s.name),
         award: achievements.map((a) => a.text.replace(/\*\*|`|\[|\]\([^)]*\)/g, "")),
-        sameAs: socialLinks().map((s) => s.href),
+        sameAs: socialLinks(content).map((s) => s.href),
         ...(profile.location ? { address: { "@type": "PostalAddress", addressLocality: profile.location } } : {}),
         ...(profile.email ? { email: `mailto:${profile.email}` } : {}),
       },
@@ -55,7 +56,7 @@ export function homeGraph() {
   };
 }
 
-export function blogGraph(posts: Post[], description: string) {
+export function blogGraph(profile: Profile, posts: Post[], description: string) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -76,12 +77,12 @@ export function blogGraph(posts: Post[], description: string) {
           url: absolute(`/blog/${post.slug}`),
         })),
       },
-      breadcrumbs([{ name: "Blog", path: "/blog" }]),
+      breadcrumbs(profile, [{ name: "Blog", path: "/blog" }]),
     ],
   };
 }
 
-export function postGraph(post: Post) {
+export function postGraph(profile: Profile, post: Post) {
   const url = absolute(`/blog/${post.slug}`);
 
   return {
@@ -104,7 +105,7 @@ export function postGraph(post: Post) {
         author: person(),
         publisher: person(),
       },
-      breadcrumbs([
+      breadcrumbs(profile, [
         { name: "Blog", path: "/blog" },
         { name: post.title, path: `/blog/${post.slug}` },
       ]),
@@ -112,7 +113,7 @@ export function postGraph(post: Post) {
   };
 }
 
-export function projectGraph(project: Project) {
+export function projectGraph(profile: Profile, project: Project) {
   const url = absolute(`/projects/${project.id}`);
 
   return {
@@ -131,7 +132,7 @@ export function projectGraph(project: Project) {
         author: person(),
         isPartOf: { "@id": WEBSITE },
       },
-      breadcrumbs([
+      breadcrumbs(profile, [
         { name: "Projects", path: "/#projects" },
         { name: project.name, path: `/projects/${project.id}` },
       ]),
@@ -139,7 +140,7 @@ export function projectGraph(project: Project) {
   };
 }
 
-function breadcrumbs(trail: { name: string; path: string }[]) {
+function breadcrumbs(profile: Profile, trail: { name: string; path: string }[]) {
   return {
     "@type": "BreadcrumbList",
     itemListElement: [

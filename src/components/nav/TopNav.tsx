@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import type { SocialKey } from "@/content";
+import type { SocialKey } from "@/lib/cms/schema";
 import { Clock } from "./Clock";
 import { SectionLink } from "./SectionLink";
 import { ThemeToggle } from "./ThemeToggle";

@@ -2,21 +2,28 @@ import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { posts, profile } from "@/content";
+import { getContent } from "@/lib/cms/content";
+import { posts } from "@/lib/cms/select";
 import { formatPostDate } from "@/lib/format";
 import { blogGraph } from "@/lib/seo";
 
-const description = `Notes on distributed systems, real-time video, and agentic AI by ${profile.name}.`;
+const describe = (name: string) => `Notes on distributed systems, real-time video, and agentic AI by ${name}.`;
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description,
-  alternates: { canonical: "/blog", types: { "application/rss+xml": "/blog/rss.xml" } },
-  openGraph: { type: "website", url: "/blog", title: `Blog | ${profile.name}`, description },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { profile } = await getContent();
+  const description = describe(profile.name);
 
-export default function BlogPage() {
-  const all = posts();
+  return {
+    title: "Blog",
+    description,
+    alternates: { canonical: "/blog", types: { "application/rss+xml": "/blog/rss.xml" } },
+    openGraph: { type: "website", url: "/blog", title: `Blog | ${profile.name}`, description },
+  };
+}
+
+export default async function BlogPage() {
+  const content = await getContent();
+  const all = posts(content);
 
   return (
     <main id="main" className="container-x pb-24 pt-32 md:pb-32 md:pt-36">
@@ -53,7 +60,7 @@ export default function BlogPage() {
         </ul>
       )}
 
-      <JsonLd data={blogGraph(all, description)} />
+      <JsonLd data={blogGraph(content.profile, all, describe(content.profile.name))} />
     </main>
   );
 }

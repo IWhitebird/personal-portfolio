@@ -1,4 +1,4 @@
-# shreyaspatange.vercel.app
+# iwhitebird.com
 
 Personal site of Shreyas Patange: experience, projects, skills, a résumé viewer, and an AI assistant that can answer questions about the work and operate the page (navigate, switch theme, open links).
 
@@ -9,38 +9,41 @@ Built with Next.js 16, React 19, Tailwind CSS v4, the Vercel AI SDK (Groq), Thre
 ```bash
 bun install
 cp .env.example .env         # fill in the keys you have
+vercel link && vercel env pull .env.local   # once, for the Blob credentials
 bun dev                      # http://localhost:3000
 ```
 
-Without `GROQ_API_KEY` the assistant replies that it is not configured; without Notion keys the site uses the committed content snapshot in `src/content/site.json`.
+`NEXT_PUBLIC_SITE_URL`, the Notion keys and a connected Vercel Blob store are required: the site has no bundled content to fall back on. Without `GROQ_API_KEY` the assistant replies that it is not configured.
 
 ## Edit content
 
-All copy, experience, projects, skills, links, blog posts, and the résumé PDF live in a Notion page called **Portfolio CMS** (seven databases). To set it up once:
+All copy, experience, projects, skills, links and blog posts live in a Notion page called **Portfolio CMS** (seven databases). The résumé PDF lives in a public Google Drive folder; its share link is a property on the `Profile` row.
 
-1. Create an internal Notion integration and an empty page; share the page with the integration.
-2. Put `NOTION_TOKEN` and `NOTION_ROOT_PAGE_ID` in `.env.local`.
-3. `bun run content:seed` creates the databases from the current snapshot and uploads screenshots and the résumé.
+Edit in Notion and the change is live within the hour: pages are prerendered from a cached fetch that revalidates every 60 minutes. To publish immediately, redeploy.
 
-After that, edit in Notion and either run `bun run content:sync` locally or trigger a Vercel deploy (the build runs the sync). A Vercel Deploy Hook URL saved as a bookmark in the Notion page is the one-click "publish".
+Screenshots are copied out of Notion into Vercel Blob the first time they are seen, named by content hash, and served through `next/image`.
 
 ## Write a post
 
-Add a row to the **Posts** database, write the body on the page, tick `Published`, and deploy. `Title`, `Date` and `Summary` are required; `Slug` defaults to a slug of the title. The page body supports paragraphs, two heading levels, bulleted, numbered and to-do lists (nested two deep), quotes, callouts, code blocks, images, bookmarks and dividers. Code is syntax-highlighted at build time, so nothing extra ships to the browser.
+Add a row to the **Posts** database, write the body on the page, and tick `Published`. `Title`, `Date` and `Summary` are required; `Slug` defaults to a slug of the title. The page body supports paragraphs, two heading levels, bulleted, numbered and to-do lists (nested two deep), quotes, callouts, code blocks, images, bookmarks and dividers. Code is syntax-highlighted on the server, so nothing extra ships to the browser.
 
 The "Block reference (keep unpublished)" row shows every supported block; duplicate it as a starting point. Unpublished rows never reach the site.
+
+## Update the résumé
+
+Replace the file in the Drive folder. Nothing in the repo or in Notion changes. If Drive assigns a new file id, paste the new share link into `Profile` → `Resume URL`.
 
 ## Scripts
 
 | Command | What it does |
 | --- | --- |
 | `bun dev` | Development server |
-| `bun run build` | Sync content from Notion (falls back to the snapshot), then `next build` |
+| `bun run build` | `next build` |
 | `bun run typecheck` | `tsc --noEmit` |
 | `bun run lint` | ESLint |
-| `bun run content:sync` | Pull Notion → `src/content/site.json`, `public/cms`, `public/resume.pdf` |
-| `bun run content:seed` | One-off: create and fill the Notion databases |
 
 ## Deploy
 
-Vercel, framework preset Next.js, build command `bun run build`. Set the variables from `.env.example` in the project settings. `UPSTASH_REDIS_REST_*` is optional but recommended so the assistant's rate limit holds across serverless instances.
+Vercel, with no config file: bun is detected from `bun.lock` and `next build` is the default. Set the variables from `.env.example` in the project settings, and connect a Blob store under **Storage** for all environments.
+
+`UPSTASH_REDIS_REST_*` is optional but recommended so the assistant's rate limit holds across serverless instances.

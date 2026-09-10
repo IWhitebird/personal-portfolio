@@ -1,6 +1,10 @@
-import { allProjects, education, achievements, experience, profile, site, skillsByCategory, socialLinks } from "@/content";
+import "server-only";
 import { stripInlineMd } from "@/components/ui/InlineMd";
+import type { SiteContent } from "@/lib/cms/schema";
+import { allProjects, skillsByCategory, socialLinks } from "@/lib/cms/select";
 import { formatRange } from "@/lib/format";
+import { RESUME_PATH } from "@/lib/resume";
+import { siteUrl } from "@/lib/site";
 
 /**
  * Compact, plain-text views of the site content for the AI assistant.
@@ -11,8 +15,8 @@ import { formatRange } from "@/lib/format";
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const matches = (haystack: string, needle?: string) => !needle || norm(haystack).includes(norm(needle));
 
-export function getExperience(company?: string) {
-  return experience
+export function getExperience(content: SiteContent, company?: string) {
+  return content.experience
     .filter((e) => matches(e.company, company) || matches(e.role, company))
     .map((e) => ({
       company: e.company,
@@ -24,8 +28,8 @@ export function getExperience(company?: string) {
     }));
 }
 
-export function getProjects(name?: string) {
-  return allProjects()
+export function getProjects(content: SiteContent, name?: string) {
+  return allProjects(content)
     .filter((p) => matches(p.name, name))
     .map((p) => ({
       name: p.name,
@@ -39,19 +43,23 @@ export function getProjects(name?: string) {
     }));
 }
 
-export function getSkills(category?: string) {
-  const groups = skillsByCategory().filter((g) => !category || category === "all" || matches(g.category, category));
-  return Object.fromEntries(groups.map((g) => [g.category, g.skills.map((s) => (s.highlight ? `${s.name} (primary)` : s.name))]));
+export function getSkills(content: SiteContent, category?: string) {
+  const groups = skillsByCategory(content).filter(
+    (g) => !category || category === "all" || matches(g.category, category),
+  );
+  return Object.fromEntries(
+    groups.map((g) => [g.category, g.skills.map((s) => (s.highlight ? `${s.name} (primary)` : s.name))]),
+  );
 }
 
-export function getContactInfo() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? profile.siteUrl;
+export function getContactInfo(content: SiteContent) {
+  const { profile } = content;
   return {
     email: profile.email,
     location: profile.location,
     availability: profile.availability.label,
-    links: Object.fromEntries(socialLinks().map((s) => [s.label, s.href])),
-    resumeUrl: new URL(profile.resume.path, siteUrl).toString(),
+    links: Object.fromEntries(socialLinks(content).map((s) => [s.label, s.href])),
+    resumeUrl: `${siteUrl}${RESUME_PATH}`,
     contactForm: `${siteUrl}/#contact`,
   };
 }
@@ -64,41 +72,37 @@ type Hit = { source: string; text: string };
  * Skylark bullet instead of guessing from a project list that never mentions it.
  * Tries the exact phrase first, then falls back to rows containing every word.
  */
-export function searchContent(query: string): Hit[] {
+export function searchContent(content: SiteContent, query: string): Hit[] {
   const q = norm(query);
   if (!q) return [];
   const words = q.split(" ").filter((w) => w.length > 1);
   const rows: { source: string; text: string; hay: string }[] = [];
   const add = (source: string, text: string) => rows.push({ source, text: stripInlineMd(text), hay: norm(text) });
 
-  for (const e of experience) {
+  for (const e of content.experience) {
     const where = `${e.company}, ${e.role} (${formatRange(e.start, e.end)})`;
     for (const bullet of e.bullets) add(where, bullet);
   }
-  for (const p of allProjects()) {
+  for (const p of allProjects(content)) {
     add(`Project: ${p.name}`, `${p.summary} ${p.description} Built with ${p.tech.join(", ")}.`);
     for (const block of p.body) if ("text" in block) add(`Project: ${p.name} (case study)`, block.text);
   }
-  for (const s of site.skills) add(`Skill, ${s.category}`, s.highlight ? `${s.name} (a primary tool)` : s.name);
-  for (const a of achievements) add("Achievement", a.text);
-  for (const paragraph of profile.bio) add("About", paragraph);
+  for (const s of content.skills) add(`Skill, ${s.category}`, s.highlight ? `${s.name} (a primary tool)` : s.name);
+  for (const a of content.achievements) add("Achievement", a.text);
+  for (const paragraph of content.profile.bio) add("About", paragraph);
 
   const phrase = rows.filter((r) => r.hay.includes(q));
   const hits = phrase.length || words.length < 2 ? phrase : rows.filter((r) => words.every((w) => r.hay.includes(w)));
   return hits.slice(0, 8).map(({ source, text }) => ({ source, text }));
 }
 
-export function getProjectByName(name: string) {
-  const n = norm(name);
-  return allProjects().find((p) => norm(p.name) === n) ?? allProjects().find((p) => norm(p.name).includes(n) || n.includes(norm(p.name)));
-}
-
 /** Short fact block for the system prompt. Aim for well under 300 tokens. */
-export function summaryFacts(): string {
+export function summaryFacts(content: SiteContent): string {
+  const { profile, experience, education, achievements, skills } = content;
   const current = experience.find((e) => e.end === null);
   const previous = experience.filter((e) => e !== current);
-  const featured = allProjects().filter((p) => p.featured).map((p) => `${p.name} (${p.summary.replace(/\.$/, "")})`);
-  const primarySkills = site.skills.filter((s) => s.highlight).map((s) => s.name);
+  const featured = allProjects(content).filter((p) => p.featured).map((p) => `${p.name} (${p.summary.replace(/\.$/, "")})`);
+  const primarySkills = skills.filter((s) => s.highlight).map((s) => s.name);
   const edu = education[0];
 
   const lines = [
@@ -111,7 +115,7 @@ export function summaryFacts(): string {
     primarySkills.length ? `Primary tools: ${primarySkills.join(", ")}.` : null,
     profile.location ? `Location: ${profile.location}.` : null,
     `Availability: ${profile.availability.label}.`,
-    `Links: ${socialLinks().map((s) => `${s.label} ${s.href}`).join(", ")}${profile.email ? `, email ${profile.email}` : ""}.`,
+    `Links: ${socialLinks(content).map((s) => `${s.label} ${s.href}`).join(", ")}${profile.email ? `, email ${profile.email}` : ""}.`,
   ];
   return lines.filter(Boolean).join("\n");
 }

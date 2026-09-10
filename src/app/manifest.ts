@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
-import { profile } from "@/content";
+import { getContent } from "@/lib/cms/content";
 
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const { profile } = await getContent();
+
   return {
     name: profile.name,
     short_name: profile.name.split(" ")[0],

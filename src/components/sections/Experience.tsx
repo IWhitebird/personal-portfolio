@@ -1,11 +1,11 @@
 import { InlineMd } from "@/components/ui/InlineMd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { formatDuration, formatRange } from "@/lib/format";
-import type { Experience as ExperienceItem } from "@/content/schema";
+import type { Experience as ExperienceItem } from "@/lib/cms/schema";
 
-type Props = { items: ExperienceItem[] };
+type Props = { items: ExperienceItem[]; now: Date };
 
-export function Experience({ items }: Props) {
+export function Experience({ items, now }: Props) {
   return (
     <section id="experience" className="container-x py-24 md:py-32">
       <SectionHeading
@@ -30,7 +30,7 @@ export function Experience({ items }: Props) {
               <div className="md:grid md:grid-cols-[200px_1fr] md:gap-10">
                 <div className="text-[14px] leading-6 text-muted">
                   <p className="text-fg-soft">{formatRange(exp.start, exp.end)}</p>
-                  <p>{formatDuration(exp.start, exp.end)}</p>
+                  <p>{formatDuration(exp.start, exp.end, now)}</p>
                   {exp.location ? <p>{exp.location}</p> : null}
                 </div>
 

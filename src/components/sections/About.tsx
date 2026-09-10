@@ -1,7 +1,7 @@
 import { InlineMd } from "@/components/ui/InlineMd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { formatRange } from "@/lib/format";
-import type { Achievement, Education, Profile, Skill } from "@/content/schema";
+import type { Achievement, Education, Profile, Skill } from "@/lib/cms/schema";
 
 type Props = {
   profile: Profile;

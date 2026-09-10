@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { InlineMd } from "@/components/ui/InlineMd";
-import type { ListItem, PostBlock } from "@/content/schema";
+import type { ListItem, PostBlock } from "@/lib/cms/schema";
 
 const INDENT = ["", "ml-6", "ml-12"] as const;
 

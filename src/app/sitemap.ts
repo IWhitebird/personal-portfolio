@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
-import { allProjects, meta, posts } from "@/content";
+import { getContent } from "@/lib/cms/content";
+import { allProjects, posts } from "@/lib/cms/select";
 import { siteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date(meta.syncedAt);
-  const all = posts();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const content = await getContent();
+  const lastModified = new Date(content.meta.fetchedAt);
+  const all = posts(content);
 
   return [
     { url: `${siteUrl}/`, lastModified, changeFrequency: "monthly", priority: 1 },
@@ -15,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...allProjects().map((project) => ({
+    ...allProjects(content).map((project) => ({
       url: `${siteUrl}/projects/${project.id}`,
       lastModified,
       changeFrequency: "yearly" as const,

@@ -1,13 +1,14 @@
-import { posts, profile } from "@/content";
+import { getContent } from "@/lib/cms/content";
+import { posts } from "@/lib/cms/select";
 import { siteUrl } from "@/lib/site";
 
 const escape = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-export const dynamic = "force-static";
-
-export function GET(): Response {
-  const all = posts();
+export async function GET(): Promise<Response> {
+  const content = await getContent();
+  const { profile } = content;
+  const all = posts(content);
   const items = all
     .map(
       (post) => `    <item>

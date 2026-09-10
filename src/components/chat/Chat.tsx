@@ -6,7 +6,7 @@ import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } fro
 import { FiSquare, FiTrash2, FiX } from "react-icons/fi";
 import { track } from "@/lib/analytics";
 import type { ChatMessage } from "@/lib/chat/tools";
-import type { SocialKey } from "@/content";
+import type { SocialKey } from "@/lib/cms/schema";
 import { MessageParts } from "./MessageParts";
 import { clearMessages, loadMessages, saveMessages } from "./persist";
 import { useClientTools, type ProjectLink } from "./useClientTools";

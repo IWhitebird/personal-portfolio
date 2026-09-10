@@ -1,4 +1,4 @@
-import type { Project } from "@/content/schema";
+import type { Project } from "@/lib/cms/schema";
 
 /**
  * A quiet marker for anything that is not simply live. Cyan is the signal

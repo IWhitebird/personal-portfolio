@@ -2,8 +2,10 @@ import { z } from "zod";
 
 /**
  * Single source of truth for everything the site, the SEO metadata, and the AI
- * assistant know about Shreyas. `scripts/sync-content.ts` writes `site.json`
- * against this schema; `src/content/index.ts` parses it at import time.
+ * assistant know about Shreyas. `src/lib/cms/content.ts` builds this shape from
+ * Notion on every regeneration and parses it here before anything renders.
+ *
+ * Types and zod only, so client components can `import type` from this file.
  *
  * Strings marked "md" allow a tiny inline-markdown subset: **bold**, `code`, [text](url).
  */
@@ -40,7 +42,8 @@ export const ProfileSchema = z.object({
   }),
   bio: z.array(md).min(1),
   resume: z.object({
-    path: z.string().default("/resume.pdf"),
+    /** The public Google Drive link the PDF is pulled from. Lives in Notion, never in code. */
+    sourceUrl: z.url(),
     updatedAt: z.string().optional(),
   }),
 });
@@ -104,7 +107,7 @@ export const ListItemSchema = z.object({
   depth: z.number().int().min(0).max(2).default(0),
 });
 
-/** The block subset a Notion post body is flattened into at sync time. */
+/** The block subset a Notion post body is flattened into when content is fetched. */
 export const PostBlockSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("p"), text: md }),
   z.object({ type: z.literal("h2"), text: z.string(), slug: z.string() }),
@@ -118,7 +121,7 @@ export const PostBlockSchema = z.discriminatedUnion("type", [
     type: z.literal("code"),
     language: z.string(),
     code: z.string(),
-    /** Shiki output with per-theme CSS variables, generated at sync time. */
+    /** Shiki output with per-theme CSS variables, generated while fetching. */
     html: z.string(),
   }),
   z.object({ type: z.literal("image"), image: ImageSchema, caption: z.string().optional() }),
@@ -156,8 +159,8 @@ export const SiteContentSchema = z.object({
     suggestions: z.array(z.string()),
   }),
   meta: z.object({
-    syncedAt: z.string(),
-    source: z.enum(["notion", "snapshot"]),
+    /** When this snapshot was built. Also the "now" every server render measures against. */
+    fetchedAt: z.string(),
   }),
 });
 
@@ -172,3 +175,4 @@ export type Post = SiteContent["posts"][number];
 export type PostBlock = Post["body"][number];
 export type PostHeading = Extract<PostBlock, { type: "h2" | "h3" }>;
 export type ListItem = z.infer<typeof ListItemSchema>;
+export type SocialKey = keyof SiteContent["profile"]["socials"];

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Notion block unions are deep; a handful of types are read */
-import type { PostBlock } from "../../src/content/schema";
+import type { PostBlock } from "./schema";
 import { highlight } from "./highlight";
 import { toMd, toPlain } from "./richtext";
 

@@ -4,7 +4,7 @@ import { InlineMd } from "@/components/ui/InlineMd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectStatus } from "@/components/ui/ProjectStatus";
 import { TrackedLink } from "@/components/ui/TrackedLink";
-import type { Project } from "@/content/schema";
+import type { Project } from "@/lib/cms/schema";
 
 type Props = { featured: Project[]; others: Project[] };
 
