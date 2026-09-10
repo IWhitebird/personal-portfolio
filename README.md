@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# iwhitebird.com
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal site of Shreyas Patange: experience, projects, skills, a résumé viewer, and an AI assistant that can answer questions about the work and operate the page (navigate, switch theme, open links).
 
-## Available Scripts
+Built with Next.js 16, React 19, Tailwind CSS v4, the Vercel AI SDK (Groq), Three.js, and Notion as the CMS.
 
-In the project directory, you can run:
+## Run locally
 
-### `npm start`
+```bash
+bun install
+cp .env.example .env         # fill in the keys you have
+vercel link && vercel env pull .env.local   # once, for the Blob credentials
+bun dev                      # http://localhost:3000
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`NEXT_PUBLIC_SITE_URL`, the Notion keys and a connected Vercel Blob store are required: the site has no bundled content to fall back on. Without `GROQ_API_KEY` the assistant replies that it is not configured.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Edit content
 
-### `npm test`
+All copy, experience, projects, skills, links and blog posts live in a Notion page called **Portfolio CMS** (seven databases). The résumé PDF lives in a public Google Drive folder; its share link is a property on the `Profile` row.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Edit in Notion and the change is live within the hour: pages are prerendered from a cached fetch that revalidates every 60 minutes. To publish immediately, redeploy.
 
-### `npm run build`
+Screenshots are copied out of Notion into Vercel Blob the first time they are seen, named by content hash, and served through `next/image`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Write a post
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Add a row to the **Posts** database, write the body on the page, and tick `Published`. `Title`, `Date` and `Summary` are required; `Slug` defaults to a slug of the title. The page body supports paragraphs, two heading levels, bulleted, numbered and to-do lists (nested two deep), quotes, callouts, code blocks, images, bookmarks and dividers. Code is syntax-highlighted on the server, so nothing extra ships to the browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The "Block reference (keep unpublished)" row shows every supported block; duplicate it as a starting point. Unpublished rows never reach the site.
 
-### `npm run eject`
+## Update the résumé
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Replace the file in the Drive folder. Nothing in the repo or in Notion changes. If Drive assigns a new file id, paste the new share link into `Profile` → `Resume URL`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Scripts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Command | What it does |
+| --- | --- |
+| `bun dev` | Development server |
+| `bun run build` | `next build` |
+| `bun run typecheck` | `tsc --noEmit` |
+| `bun run lint` | ESLint |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Deploy
 
-## Learn More
+Vercel, with no config file: bun is detected from `bun.lock` and `next build` is the default. Set the variables from `.env.example` in the project settings, and connect a Blob store under **Storage** for all environments.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+`UPSTASH_REDIS_REST_*` is optional but recommended so the assistant's rate limit holds across serverless instances.

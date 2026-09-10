@@ -1,0 +1,362 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   Design tokens. Light is the default; `.dark` on <html> swaps them.
+   Cyan is a signal colour (live, current, focus, cursor), never a wash.
+   ------------------------------------------------------------------ */
+:root {
+  --bg: #f4f7f9;
+  --surface: #ffffff;
+  --surface-2: #e9eff3;
+  --fg: #0b1620;
+  --fg-soft: #33434f;
+  --muted: #5c6b78;
+  --line: rgba(11, 22, 32, 0.1);
+  --line-strong: rgba(11, 22, 32, 0.2);
+  --accent: #007a99;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(0, 122, 153, 0.1);
+  --glass: rgba(244, 247, 249, 0.72);
+  --selection: rgba(0, 122, 153, 0.22);
+  --shadow: 0 1px 2px rgba(11, 22, 32, 0.06), 0 12px 32px -16px rgba(11, 22, 32, 0.18);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0a0f14;
+  --surface: #0f161d;
+  --surface-2: #141d26;
+  --fg: #e6edf3;
+  --fg-soft: #c3cdd6;
+  --muted: #8b98a5;
+  --line: rgba(230, 237, 243, 0.08);
+  --line-strong: rgba(230, 237, 243, 0.18);
+  --accent: #00ddff;
+  --accent-fg: #06141a;
+  --accent-soft: rgba(0, 221, 255, 0.1);
+  --glass: rgba(10, 15, 20, 0.7);
+  --selection: rgba(0, 221, 255, 0.28);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -20px rgba(0, 0, 0, 0.8);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-serif: var(--font-serif-display), ui-serif, Georgia, "Times New Roman", serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-panel: var(--shadow);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--selection);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* Tailwind's reset gives buttons `cursor: default`; interactive controls should feel clickable. */
+  button:not(:disabled),
+  summary,
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    /* Scroll-driven animations ignore duration, so switch them off outright. These sit in the
+       base layer while the animated rules live in components, so they need !important to win. */
+    .hero-rise {
+      animation: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    .timeline > li::after {
+      animation: none !important;
+      transform: scaleY(1) !important;
+    }
+  }
+}
+
+@layer components {
+  /* Fine film grain over the whole page. Flat colour fields read as cheap without it. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .dark .grain {
+    opacity: 0.09;
+    mix-blend-mode: screen;
+  }
+
+  .container-x {
+    @apply mx-auto w-full max-w-[1120px] px-6 md:px-10;
+  }
+
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  }
+
+  .hairline {
+    border-color: var(--line);
+  }
+
+  .display {
+    @apply font-serif font-medium;
+    font-variant-ligatures: common-ligatures;
+  }
+
+  .link {
+    @apply text-fg underline decoration-line-strong underline-offset-[5px] transition-colors duration-200;
+  }
+  .link:hover {
+    @apply decoration-accent text-accent;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-sm border px-2 py-[3px] font-mono text-[12px] leading-none text-fg-soft;
+    border-color: var(--line);
+  }
+  /* Now the only signal for a primary tool, since the full list is always shown.
+     A filled tint reads unmistakably without spending the accent colour on 18 chips. */
+  .chip--strong {
+    @apply text-fg;
+    border-color: var(--line-strong);
+    background: var(--surface-2);
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    @apply inline-flex h-10 items-center gap-2 rounded-md px-4 text-[14px] font-medium disabled:cursor-not-allowed disabled:opacity-50;
+    transition:
+      background-color 200ms var(--ease-out-quart),
+      border-color 200ms var(--ease-out-quart),
+      color 200ms var(--ease-out-quart),
+      transform 200ms var(--ease-out-quart);
+  }
+  .btn-primary:active:not(:disabled),
+  .btn-ghost:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+  .btn-primary {
+    @apply bg-fg text-bg hover:bg-accent hover:text-accent-fg;
+  }
+  .btn-ghost {
+    @apply border text-fg hover:border-accent hover:text-accent;
+    border-color: var(--line-strong);
+  }
+  .icon-btn {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-md text-fg-soft hover:text-accent;
+    transition:
+      color 200ms var(--ease-out-quart),
+      transform 200ms var(--ease-out-quart);
+  }
+  .icon-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* Hero copy rises a little slower than the page, matching the sphere's drift. */
+  .hero-rise {
+    will-change: transform;
+  }
+
+  /* Experience rail. Each item owns the segment from its own dot down to the next item's dot, so the
+     line begins exactly at the first marker and ends exactly at the last one, and each segment draws
+     as that item scrolls through. 11.5px is the dot's centre (top 7px + half of 9px). */
+  .timeline > li::before,
+  .timeline > li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 11.5px;
+    bottom: -11.5px;
+    width: 1px;
+  }
+  .timeline > li:last-child::before,
+  .timeline > li:last-child::after {
+    display: none;
+  }
+  .timeline > li::before {
+    background: var(--line);
+  }
+  .timeline > li::after {
+    background: var(--accent);
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  @supports (animation-timeline: view()) {
+    .hero-rise {
+      animation: hero-rise linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    .timeline > li::after {
+      transform: scaleY(0);
+      animation: rail-draw linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 45%;
+    }
+  }
+
+  @keyframes hero-rise {
+    to {
+      transform: translateY(-4rem);
+      opacity: 0.35;
+    }
+  }
+  @keyframes rail-draw {
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes live-pulse {
+    0% {
+      box-shadow: 0 0 0 0 var(--accent-soft);
+    }
+    70% {
+      box-shadow: 0 0 0 8px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  .live-dot {
+    animation: live-pulse 2.4s var(--ease-out-quart) infinite;
+  }
+
+  .prose-md p + p {
+    margin-top: 1em;
+  }
+  .prose-md strong {
+    @apply font-semibold text-fg;
+  }
+  .prose-md code {
+    @apply rounded-sm bg-surface-2 px-1 py-[1px] font-mono text-[0.9em];
+  }
+}
+
+/* Shiki emits both themes as custom properties; pick one per theme. */
+.shiki-block pre {
+  overflow-x: auto;
+  padding: 1rem;
+  background-color: var(--surface-2) !important;
+  font-size: 13.5px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+.shiki-block code {
+  font-family: var(--font-mono);
+}
+.shiki-block span {
+  color: var(--shiki-light);
+}
+.dark .shiki-block span {
+  color: var(--shiki-dark);
+}
+
+/* Devanagari glyphs shown mid-decode; lighter so the resolved name reads as the "real" thing */
+.decoder-text__glyph {
+  opacity: 0.55;
+  font-weight: 400;
+}
+.decoder-text::after {
+  content: "_";
+  visibility: hidden;
+}
+
+/* Terminal cursor used by the chat and the hero tagline */
+@keyframes block-blink {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.block-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 2px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: block-blink 0.8s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .block-cursor {
+    animation: none;
+    opacity: 0.6;
+  }
+}
