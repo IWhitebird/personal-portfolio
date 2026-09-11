@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PostBody } from "@/components/blog/PostBody";
+import { ProjectCarousel } from "@/components/projects/ProjectCarousel";
+import { SphereBackground } from "@/components/sphere/SphereBackground";
 import { TableOfContents, hasOutline } from "@/components/blog/TableOfContents";
 import { InlineMd } from "@/components/ui/InlineMd";
 import { JsonLd } from "@/components/ui/JsonLd";
@@ -44,10 +45,9 @@ export default async function ProjectPage({ params }: Params) {
   const index = all.findIndex((p) => p.id === slug);
   const previous = index > 0 ? all[index - 1] : undefined;
   const next = index < all.length - 1 ? all[index + 1] : undefined;
-  const [cover, ...gallery] = project.images;
-
   return (
     <main id="main" className="container-x pb-24 pt-32 md:pb-32 md:pt-36">
+      <SphereBackground />
       <div
         className={
           hasOutline(project.body)
@@ -103,17 +103,7 @@ export default async function ProjectPage({ params }: Params) {
             ))}
           </ul>
 
-          {cover ? (
-            <Image
-              src={cover.src}
-              alt={cover.alt}
-              width={cover.width}
-              height={cover.height}
-              sizes="(min-width: 1120px) 860px, 100vw"
-              priority
-              className="mt-12 h-auto w-full rounded-lg border border-line bg-surface"
-            />
-          ) : null}
+          {project.images.length > 0 ? <ProjectCarousel images={project.images} name={project.name} /> : null}
 
           <div className="mt-12">
             {project.body.length > 0 ? (
@@ -124,23 +114,6 @@ export default async function ProjectPage({ params }: Params) {
               </p>
             )}
           </div>
-
-          {gallery.length > 0 ? (
-            <ul className="mt-14 grid gap-6 sm:grid-cols-2">
-              {gallery.map((image) => (
-                <li key={image.src}>
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    sizes="(min-width: 640px) 50vw, 100vw"
-                    className="h-auto w-full rounded-md border border-line bg-surface"
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : null}
 
           {previous || next ? (
             <nav aria-label="More projects" className="mt-20 grid gap-6 border-t border-line pt-8 sm:grid-cols-2">

@@ -20,10 +20,10 @@ export function Experience({ items, now }: Props) {
             <li key={exp.id} className="relative pb-16 pl-8 last:pb-0 md:pl-12">
               <span
                 aria-hidden
-                className={`absolute -left-[5px] top-[7px] h-[9px] w-[9px] rounded-full border-2 ${
+                className={`absolute -left-[3.5px] top-[7px] h-[9px] w-[9px] rounded-full border-2 ${
                   current
                     ? "live-dot border-accent bg-accent"
-                    : "border-line-strong bg-bg"
+                    : "timeline-dot--past"
                 }`}
               />
 

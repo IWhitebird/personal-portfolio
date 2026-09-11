@@ -91,7 +91,7 @@ export async function getContent(): Promise<SiteContent> {
   const postsDb = dbs.get("Posts");
 
   // A renamed property would otherwise drop a field silently.
-  assertProps(profileDb, ["Name", "Headline", "Site URL", "GitHub", "LinkedIn", "Availability", "SEO Title", "SEO Description", "Resume URL", "Taglines", "Chat Suggestions"]);
+  assertProps(profileDb, ["Name", "Headline", "Site URL", "GitHub", "LinkedIn", "Availability", "SEO Title", "SEO Description", "Resume URL", "About", "Taglines", "Chat Suggestions"]);
   assertProps(experienceDb, ["Company", "Role", "Dates", "Order", "Published"]);
   assertProps(projectsDb, ["Name", "Summary", "Screenshots", "Alt Text", "Tech", "Status", "Featured", "Order", "Published"]);
   assertProps(skillsDb, ["Name", "Category", "Order", "Highlight"]);
@@ -112,8 +112,7 @@ export async function getContent(): Promise<SiteContent> {
   const [profilePage] = await queryAll(notion, profileDb);
   if (!profilePage) throw new Error("Profile database has no rows");
 
-  const [bioBlocks, experiencePages, projectPages, skillPages, educationPages, achievementPages, postPages] = await Promise.all([
-    pageBlocks(notion, profilePage.id),
+  const [experiencePages, projectPages, skillPages, educationPages, achievementPages, postPages] = await Promise.all([
     queryAll(notion, experienceDb, [{ property: "Order", direction: "ascending" }]),
     queryAll(notion, projectsDb, [{ property: "Order", direction: "ascending" }]),
     queryAll(notion, skillsDb, [{ property: "Order", direction: "ascending" }]),
@@ -144,7 +143,10 @@ export async function getContent(): Promise<SiteContent> {
       title: prop.text(profilePage, "SEO Title"),
       description: prop.text(profilePage, "SEO Description"),
     },
-    bio: paragraphs(bioBlocks),
+    // One paragraph per line of the "About" property. It used to be the Profile
+    // page body, which nobody could find: a row with no About field, and prose
+    // hidden one click deeper.
+    bio: lines(toMd(prop.richText(profilePage, "About"))),
     resume: {
       // The public Drive link to the PDF; the file itself is never in the repo.
       sourceUrl: requireUrl(profilePage, "Resume URL"),

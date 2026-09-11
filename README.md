@@ -44,6 +44,8 @@ Replace the file in the Drive folder. Nothing in the repo or in Notion changes. 
 
 ## Deploy
 
-Vercel, with no config file: bun is detected from `bun.lock` and `next build` is the default. Set the variables from `.env.example` in the project settings, and connect a Blob store under **Storage** for all environments.
+Vercel. `vercel.json` pins the framework to Next.js and the install command to `bunx bun@1.4.2 install`, because the build image's bun is older than the one that writes this repo's lockfile. Bump that version when you upgrade bun locally.
+
+Set the variables from `.env.example` in the project settings, and connect a Blob store under **Storage** for all environments (including Development, which is what `vercel env pull` reads).
 
 `UPSTASH_REDIS_REST_*` is optional but recommended so the assistant's rate limit holds across serverless instances.

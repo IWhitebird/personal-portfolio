@@ -15,6 +15,9 @@
   --muted: #5c6b78;
   --line: rgba(11, 22, 32, 0.1);
   --line-strong: rgba(11, 22, 32, 0.2);
+  /* The experience rail runs unbroken for ~650px, so it needs more weight than a
+     card hairline to read as a track the cyan fill travels along. */
+  --rail: rgba(11, 22, 32, 0.18);
   --accent: #007a99;
   --accent-fg: #ffffff;
   --accent-soft: rgba(0, 122, 153, 0.1);
@@ -33,6 +36,7 @@
   --muted: #8b98a5;
   --line: rgba(230, 237, 243, 0.08);
   --line-strong: rgba(230, 237, 243, 0.18);
+  --rail: rgba(230, 237, 243, 0.24);
   --accent: #00ddff;
   --accent-fg: #06141a;
   --accent-soft: rgba(0, 221, 255, 0.1);
@@ -137,6 +141,11 @@
       animation: none !important;
       transform: scaleY(1) !important;
     }
+    .timeline-dot--past {
+      animation: none !important;
+      border-color: var(--accent) !important;
+      background: var(--accent) !important;
+    }
   }
 }
 
@@ -186,8 +195,10 @@
     @apply inline-flex items-center rounded-sm border px-2 py-[3px] font-mono text-[12px] leading-none text-fg-soft;
     border-color: var(--line);
   }
-  /* Now the only signal for a primary tool, since the full list is always shown.
-     A filled tint reads unmistakably without spending the accent colour on 18 chips. */
+  /* Driven by `Highlight` in Notion. Currently unchecked on every skill, so no
+     chip renders with it: the owner disliked the two-weight wall. Left in place
+     rather than deleted so ticking a row in Notion is all it takes to bring the
+     emphasis back, with no code change. */
   .chip--strong {
     @apply text-fg;
     border-color: var(--line-strong);
@@ -229,9 +240,11 @@
     will-change: transform;
   }
 
-  /* Experience rail. Each item owns the segment from its own dot down to the next item's dot, so the
-     line begins exactly at the first marker and ends exactly at the last one, and each segment draws
-     as that item scrolls through. 11.5px is the dot's centre (top 7px + half of 9px). */
+  /* Experience rail. Each item owns the segment from its own dot down to the next
+     item's dot, so the line starts on the first marker and stops on the last one.
+     It must not run on past the last dot through that role's bullets: with two
+     roles that is most of a viewport of line beside nothing. 11.5px is the dot's
+     centre (top 7px + half of 9px). */
   .timeline > li::before,
   .timeline > li::after {
     content: "";
@@ -239,19 +252,27 @@
     left: 0;
     top: 11.5px;
     bottom: -11.5px;
-    width: 1px;
+    width: 2px;
   }
   .timeline > li:last-child::before,
   .timeline > li:last-child::after {
     display: none;
   }
   .timeline > li::before {
-    background: var(--line);
+    background: var(--rail);
   }
   .timeline > li::after {
     background: var(--accent);
     transform: scaleY(1);
     transform-origin: top;
+  }
+  /* A past role's dot fills cyan the moment the rail reaches it. Same view()
+     inset as the rail, so the dot's own 9px cover range crosses the same 58%
+     line the segment above it finishes on. Filled to match the current role's
+     dot; the pulse alone marks "now". Base state is the finished state. */
+  .timeline-dot--past {
+    border-color: var(--accent);
+    background: var(--accent);
   }
 
   @supports (animation-timeline: view()) {
@@ -260,11 +281,26 @@
       animation-timeline: scroll(root);
       animation-range: 0 100vh;
     }
+    /* The inset shrinks the scrollport to a zero-height line 58% down the screen,
+       so each segment's cover range is exactly its own height and it fills while
+       that line crosses it. Segments above the line are full, below it empty: one
+       boundary, pinned to the line, descending with the scroll.
+       The inset MUST be an argument of view(). The `view-timeline-inset` property
+       only applies to named timelines; set alongside an anonymous view() it is
+       silently ignored, and the fill degrades to plain cover over viewport plus
+       segment, which crawls and reaches each dot only as it leaves the top. */
     .timeline > li::after {
       transform: scaleY(0);
       animation: rail-draw linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 45%;
+      animation-timeline: view(58% 42%);
+      animation-range: cover 0% cover 100%;
+    }
+    .timeline-dot--past {
+      border-color: var(--line-strong);
+      background: var(--bg);
+      animation: dot-reach linear both;
+      animation-timeline: view(58% 42%);
+      animation-range: cover 0% cover 100%;
     }
   }
 
@@ -277,6 +313,12 @@
   @keyframes rail-draw {
     to {
       transform: scaleY(1);
+    }
+  }
+  @keyframes dot-reach {
+    to {
+      border-color: var(--accent);
+      background: var(--accent);
     }
   }
 
