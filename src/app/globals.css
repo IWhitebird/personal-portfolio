@@ -304,6 +304,15 @@
     }
   }
 
+  /* Theme switch. useThemeSwitch runs it as a View Transition, so old and new
+     page cross-fade as single frames. The browser default is a 250ms linear
+     fade; this matches the site's click-response timing instead. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 400ms;
+    animation-timing-function: var(--ease-out-quart);
+  }
+
   @keyframes hero-rise {
     to {
       transform: translateY(-4rem);

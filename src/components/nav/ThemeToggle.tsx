@@ -1,14 +1,14 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { useMounted } from "@/hooks/useMounted";
+import { useThemeSwitch } from "@/hooks/useThemeSwitch";
 import { track } from "@/lib/analytics";
 
 const ICON = "absolute inset-0 transition-[opacity,transform] duration-300 ease-out-quart";
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, switchTheme } = useThemeSwitch();
   const mounted = useMounted();
   const dark = resolvedTheme === "dark";
 
@@ -19,7 +19,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       aria-label={mounted ? `Switch to ${dark ? "light" : "dark"} theme` : "Toggle theme"}
       onClick={() => {
         const next = dark ? "light" : "dark";
-        setTheme(next);
+        switchTheme(next);
         track("theme_change", { theme: next });
       }}
     >

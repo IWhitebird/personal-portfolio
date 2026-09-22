@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useTheme } from "next-themes";
+import { useThemeSwitch } from "@/hooks/useThemeSwitch";
 import { EVENTS, emit } from "@/lib/events";
 import { scrollToSection } from "@/lib/scroll";
 import { isPageTool, SECTIONS, type SectionId } from "@/lib/chat/page-tools";
@@ -22,7 +22,7 @@ type Deps = {
 
 /** Executes page tools requested by the model. Returns `not-client` for server tools so the caller ignores them. */
 export function useClientTools({ socials, projects, resumePath }: Deps) {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { resolvedTheme, switchTheme } = useThemeSwitch();
 
   return useCallback(
     (toolName: string, input: unknown): ClientToolResult => {
@@ -40,7 +40,7 @@ export function useClientTools({ socials, projects, resumePath }: Deps) {
         case "set_theme": {
           if (args.theme !== "light" && args.theme !== "dark") return { kind: "error", errorText: "Unknown theme" };
           if (resolvedTheme === args.theme) return { kind: "ok", output: { ok: true, theme: args.theme, unchanged: true } };
-          setTheme(args.theme);
+          switchTheme(args.theme);
           return { kind: "ok", output: { ok: true, theme: args.theme } };
         }
         case "show_resume": {
@@ -84,6 +84,6 @@ export function useClientTools({ socials, projects, resumePath }: Deps) {
           return { kind: "not-client" };
       }
     },
-    [socials, projects, resumePath, setTheme, resolvedTheme],
+    [socials, projects, resumePath, switchTheme, resolvedTheme],
   );
 }
