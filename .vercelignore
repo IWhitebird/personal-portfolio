@@ -1,0 +1,4 @@
+# vercel deploy uploads the working tree. The CLI skips .env.local by default but not .env;
+# git-integration builds clone the repo and never see either. Belt and braces.
+.env
+.env.*

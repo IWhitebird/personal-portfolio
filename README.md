@@ -44,7 +44,7 @@ Replace the file in the Drive folder. Nothing in the repo or in Notion changes. 
 
 ## Deploy
 
-Vercel. `vercel.json` pins the framework to Next.js and the install command to `bunx bun@1.4.2 install`, because the build image's bun is older than the one that writes this repo's lockfile. Bump that version when you upgrade bun locally.
+Vercel, from the `master` branch. `vercel.json` pins the framework to Next.js; Vercel detects the bun 1.4 lockfile on its own and installs with its own bun, so there is no version pin to maintain.
 
 Set the variables from `.env.example` in the project settings, and connect a Blob store under **Storage** for all environments (including Development, which is what `vercel env pull` reads).
 
