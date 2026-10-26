@@ -4,6 +4,7 @@ import type { IconType } from "react-icons";
 import { FiDownload, FiGithub, FiLinkedin, FiMessageSquare } from "react-icons/fi";
 import { SiLeetcode, SiX } from "react-icons/si";
 import { DecoderText } from "@/components/ui/DecoderText";
+import { InlineMd } from "@/components/ui/InlineMd";
 import { useRotatingText } from "@/hooks/useRotatingText";
 import { track } from "@/lib/analytics";
 import { EVENTS, emit } from "@/lib/events";
@@ -26,26 +27,25 @@ type Props = {
 
 export function Hero({ profile, resumePath, socials }: Props) {
   const tagline = useRotatingText(profile.taglines);
-  const isOpen = profile.availability.status !== "not-looking";
-
+  // No availability line above the name: the owner took it out. Availability still
+  // reaches the assistant and JSON-LD from Notion.
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center overflow-hidden">
       <div className="hero-rise container-x relative pb-24 pt-32 md:pb-28 md:pt-24">
-        <p className="flex items-center gap-2 text-[13px] text-muted">
-          <span
-            aria-hidden
-            className={`inline-block h-[7px] w-[7px] rounded-full ${isOpen ? "live-dot bg-accent" : "bg-muted"}`}
-          />
-          {profile.availability.label}
-        </p>
-
-        <h1 className="display mt-5 text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.95] tracking-[-0.02em] text-fg">
+        <h1 className="display text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.95] tracking-[-0.02em] text-fg">
           <DecoderText text={profile.name} />
         </h1>
 
         <p className="mt-6 max-w-[36ch] text-[clamp(1.125rem,2.1vw,1.5rem)] leading-snug text-fg-soft">
           {profile.headline}
         </p>
+
+        {profile.now ? (
+          <p className="prose-md mt-4 max-w-[56ch] text-[15px] leading-relaxed text-muted">
+            <span className="mr-2 text-accent">Now</span>
+            <InlineMd text={profile.now} />
+          </p>
+        ) : null}
 
         <p className="mt-5 flex h-6 items-center font-mono text-[13px] text-muted" aria-live="off">
           <span aria-hidden className="mr-2 text-accent/70">{">"}</span>

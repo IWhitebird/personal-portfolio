@@ -5,7 +5,7 @@
  * `knowledge.ts`, so a client component importing a value from there would pull
  * the whole CMS snapshot into the bundle. Page tools live here instead.
  */
-export const SECTIONS = ["home", "experience", "projects", "about", "contact"] as const;
+export const SECTIONS = ["home", "experience", "projects", "achievements", "about", "contact"] as const;
 export const PLATFORMS = ["github", "linkedin", "leetcode", "x"] as const;
 
 /** Tools with no `execute`: the browser runs them and reports back with `addToolOutput`. */

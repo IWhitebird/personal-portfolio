@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getContent } from "@/lib/cms/content";
-import { allProjects, posts } from "@/lib/cms/select";
+import { allProjects, blogLink, posts } from "@/lib/cms/select";
 import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -11,12 +11,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: `${siteUrl}/`, lastModified, changeFrequency: "monthly", priority: 1 },
     { url: `${siteUrl}/resume`, lastModified, changeFrequency: "monthly", priority: 0.6 },
-    {
-      url: `${siteUrl}/blog`,
-      lastModified: all[0] ? new Date(all[0].updated ?? all[0].date) : lastModified,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
+    // Only when the blog lives here: an external blog has its own sitemap, and an empty /blog is a thin page.
+    ...(blogLink(content)?.external === false
+      ? [
+          {
+            url: `${siteUrl}/blog`,
+            lastModified: all[0] ? new Date(all[0].updated ?? all[0].date) : lastModified,
+            changeFrequency: "weekly" as const,
+            priority: 0.8,
+          },
+        ]
+      : []),
     ...allProjects(content).map((project) => ({
       url: `${siteUrl}/projects/${project.id}`,
       lastModified,

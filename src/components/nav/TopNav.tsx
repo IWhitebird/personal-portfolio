@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiArrowUpRight, FiMenu, FiX } from "react-icons/fi";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SocialKey } from "@/lib/cms/schema";
+import type { BlogLink } from "@/lib/cms/select";
 import { Clock } from "./Clock";
 import { SectionLink } from "./SectionLink";
 import { ThemeToggle } from "./ThemeToggle";
@@ -15,20 +16,39 @@ export const NAV_SECTIONS = [
   { label: "Home", id: "home" },
   { label: "Experience", id: "experience" },
   { label: "Projects", id: "projects" },
+  { label: "Achievements", id: "achievements" },
   { label: "About", id: "about" },
   { label: "Contact", id: "contact" },
 ] as const;
 
-const BLOG = { label: "Blog", href: "/blog" } as const;
+const BLOG_LABEL = "Blog";
 
 type Props = {
   name: string;
   socials: { key: SocialKey; label: string; href: string }[];
-  /** The Blog link is hidden until something is published: an empty page reads worse than no link. */
-  showBlog: boolean;
+  /** Null hides the link: an empty blog reads worse than no link. External means his proomt profile. */
+  blog: BlogLink | null;
 };
 
-export function TopNav({ name, socials, showBlog }: Props) {
+/** Opens off-site in a new tab, with an arrow so it is clear the visitor is leaving. */
+function BlogAnchor({ blog, className, onClick, children }: { blog: BlogLink; className: string; onClick?: () => void; children: React.ReactNode }) {
+  if (!blog.external) {
+    return (
+      <Link href={blog.href} onClick={onClick} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a href={blog.href} target="_blank" rel="noopener noreferrer me" onClick={onClick} className={className}>
+      {children}
+      <FiArrowUpRight aria-hidden className="ml-0.5 inline-block align-[-0.1em]" size="0.9em" />
+      <span className="sr-only"> (opens proomt)</span>
+    </a>
+  );
+}
+
+export function TopNav({ name, socials, blog }: Props) {
   const pathname = usePathname();
   const reduceMotion = usePrefersReducedMotion();
   const [scrolled, setScrolled] = useState(false);
@@ -117,17 +137,16 @@ export function TopNav({ name, socials, showBlog }: Props) {
                 </li>
               );
             })}
-            {showBlog ? (
+            {blog ? (
               <li>
-              <Link
-                href={BLOG.href}
-                aria-current={onBlog ? "page" : undefined}
-                className={`relative text-[14px] transition-colors duration-200 hover:text-fg ${
-                  onBlog ? "text-fg" : "text-muted"
-                } ${underline} ${onBlog ? "after:scale-x-100" : "after:scale-x-0"}`}
-              >
-                {BLOG.label}
-              </Link>
+                <BlogAnchor
+                  blog={blog}
+                  className={`relative text-[14px] transition-colors duration-200 hover:text-fg ${
+                    onBlog ? "text-fg" : "text-muted"
+                  } ${underline} ${onBlog ? "after:scale-x-100" : "after:scale-x-0"}`}
+                >
+                  {BLOG_LABEL}
+                </BlogAnchor>
               </li>
             ) : null}
           </ul>
@@ -160,7 +179,7 @@ export function TopNav({ name, socials, showBlog }: Props) {
             transition={{ duration: reduceMotion ? 0 : 0.2, ease }}
           >
             <ul className="container-x flex flex-col gap-1">
-              {[...NAV_SECTIONS, ...(showBlog ? [{ label: BLOG.label, id: null }] : [])].map(({ label, id }, index) => (
+              {[...NAV_SECTIONS, ...(blog ? [{ label: BLOG_LABEL, id: null }] : [])].map(({ label, id }, index) => (
                 <motion.li
                   key={label}
                   initial={{ opacity: 0, y: 12 }}
@@ -177,17 +196,17 @@ export function TopNav({ name, socials, showBlog }: Props) {
                     >
                       {label}
                     </SectionLink>
-                  ) : (
-                    <Link
-                      href={BLOG.href}
+                  ) : blog ? (
+                    <BlogAnchor
+                      blog={blog}
                       onClick={() => setOpen(false)}
                       className={`display block py-3 text-[2.125rem] tracking-[-0.01em] ${
                         onBlog ? "text-fg" : "text-muted"
                       }`}
                     >
                       {label}
-                    </Link>
-                  )}
+                    </BlogAnchor>
+                  ) : null}
                 </motion.li>
               ))}
             </ul>

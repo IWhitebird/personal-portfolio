@@ -41,6 +41,26 @@ const STATUS: Record<string, SiteContent["projects"][number]["status"]> = {
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const lines = (s: string) => s.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
+/**
+ * `CMS_PREVIEW=1` in `.env.local` previews unpublished Notion edits locally. Dev
+ * only: a stray value in a Vercel environment must never put drafts on the live site.
+ *
+ * - Unpublished rows show.
+ * - An unpublished row with the same title as a published one stands in for it.
+ *   That is how an edit to live content is staged: duplicate the page, untick
+ *   Published, edit the copy. Going live is publishing the copy and archiving the original.
+ * - A Profile property named "<Field> (draft)" overrides <Field>, and
+ *   "Achievements (draft)" (one per line, "title | detail | url") replaces the Achievements rows.
+ */
+const PREVIEW = process.env.NODE_ENV === "development" && process.env.CMS_PREVIEW === "1";
+
+function visible<T>(pages: T[], titleProp: string): T[] {
+  const isPublished = (p: T) => prop.checkbox(p, "Published");
+  if (!PREVIEW) return pages.filter(isPublished);
+  const staged = new Set(pages.filter((p) => !isPublished(p)).map((p) => prop.title(p, titleProp)));
+  return pages.filter((p) => !isPublished(p) || !staged.has(prop.title(p, titleProp)));
+}
+
 /** A URL the site cannot render without, so a blank cell fails the regeneration by name. */
 function requireUrl(page: unknown, name: string): string {
   const url = prop.url(page, name);
@@ -96,7 +116,7 @@ export async function getContent(): Promise<SiteContent> {
   assertProps(projectsDb, ["Name", "Summary", "Screenshots", "Alt Text", "Tech", "Status", "Featured", "Order", "Published"]);
   assertProps(skillsDb, ["Name", "Category", "Order", "Highlight"]);
   assertProps(educationDb, ["Institution", "Degree", "Dates", "Order"]);
-  assertProps(achievementsDb, ["Achievement", "Order"]);
+  assertProps(achievementsDb, ["Achievement", "Detail", "Order"]);
   if (postsDb) assertProps(postsDb, ["Title", "Slug", "Date", "Summary", "Tags", "Published"]);
 
   const mirror = await imageMirror();
@@ -122,9 +142,15 @@ export async function getContent(): Promise<SiteContent> {
   ]);
 
   // ---- Profile ----
+  /** A Profile rich-text field, or its "(draft)" twin while previewing. */
+  const field = (name: string): RichTextItem[] => {
+    const draft = PREVIEW ? prop.richText(profilePage, `${name} (draft)`) : [];
+    return draft.length ? draft : prop.richText(profilePage, name);
+  };
+
   const profile: SiteContent["profile"] = {
     name: prop.title(profilePage, "Name"),
-    headline: prop.text(profilePage, "Headline"),
+    headline: toPlain(field("Headline")).trim(),
     location: prop.text(profilePage, "Location") || undefined,
     email: prop.email(profilePage, "Email"),
     siteUrl: requireUrl(profilePage, "Site URL"),
@@ -136,17 +162,21 @@ export async function getContent(): Promise<SiteContent> {
     },
     availability: {
       status: AVAILABILITY[(prop.select(profilePage, "Availability") ?? "open").toLowerCase()] ?? "open",
-      label: prop.text(profilePage, "Availability Note"),
+      label: toPlain(field("Availability Note")).trim(),
     },
     taglines: lines(toPlain(prop.richText(profilePage, "Taglines"))),
+    now: toMd(field("Now")) || undefined,
+    projectsIntro: toPlain(field("Projects Intro")).trim() || undefined,
+    // Where he writes. Today that is his profile on proomt; the Notion-backed /blog stays for posts written here.
+    blogUrl: prop.url(profilePage, "Blog URL"),
     seo: {
       title: prop.text(profilePage, "SEO Title"),
-      description: prop.text(profilePage, "SEO Description"),
+      description: toPlain(field("SEO Description")).trim(),
     },
     // One paragraph per line of the "About" property. It used to be the Profile
     // page body, which nobody could find: a row with no About field, and prose
     // hidden one click deeper.
-    bio: lines(toMd(prop.richText(profilePage, "About"))),
+    bio: lines(toMd(field("About"))),
     resume: {
       // The public Drive link to the PDF; the file itself is never in the repo.
       sourceUrl: requireUrl(profilePage, "Resume URL"),
@@ -156,8 +186,7 @@ export async function getContent(): Promise<SiteContent> {
 
   // ---- Experience ----
   const experience: SiteContent["experience"] = await Promise.all(
-    experiencePages
-      .filter((p) => prop.checkbox(p, "Published"))
+    visible(experiencePages, "Company")
       .map(async (page) => {
         const company = prop.title(page, "Company");
         const dates = prop.date(page, "Dates");
@@ -182,8 +211,7 @@ export async function getContent(): Promise<SiteContent> {
 
   // ---- Projects ----
   const projects: SiteContent["projects"] = await Promise.all(
-    projectPages
-      .filter((p) => prop.checkbox(p, "Published"))
+    visible(projectPages, "Name")
       .map(async (page) => {
         const name = prop.title(page, "Name");
         const summary = prop.text(page, "Summary");
@@ -212,6 +240,7 @@ export async function getContent(): Promise<SiteContent> {
           githubUrl: prop.url(page, "GitHub URL"),
           tech: prop.multiSelect(page, "Tech"),
           status: STATUS[(prop.select(page, "Status") ?? "live").toLowerCase()] ?? "live",
+          programs: lines(prop.text(page, "Programs")),
           featured: prop.checkbox(page, "Featured"),
           order: prop.number(page, "Order"),
           body,
@@ -255,8 +284,7 @@ export async function getContent(): Promise<SiteContent> {
 
   // ---- Posts ----
   const posts: SiteContent["posts"] = await Promise.all(
-    postPages
-      .filter((p) => prop.checkbox(p, "Published"))
+    visible(postPages, "Title")
       .map(async (page) => {
         const title = prop.title(page, "Title");
         const date = prop.date(page, "Date").start;
@@ -280,6 +308,8 @@ export async function getContent(): Promise<SiteContent> {
       }),
   );
 
+  const draftAchievements = PREVIEW ? lines(toMd(prop.richText(profilePage, "Achievements (draft)"))) : [];
+
   return SiteContentSchema.parse({
     profile,
     experience,
@@ -287,10 +317,16 @@ export async function getContent(): Promise<SiteContent> {
     skillCategories: categoryOrder.filter((c) => skills.some((s) => s.category === c)),
     skills,
     education,
-    achievements: achievementPages.map((p) => ({
-      text: toMd(p.properties?.Achievement?.title ?? []),
-      url: prop.url(p, "URL"),
-    })),
+    achievements: draftAchievements.length
+      ? draftAchievements.map((line) => {
+          const [title = "", detail, url] = line.split(" | ").map((s) => s.trim());
+          return { title, detail: detail || undefined, url: url || undefined };
+        })
+      : achievementPages.map((p) => ({
+          title: prop.title(p, "Achievement"),
+          detail: toMd(prop.richText(p, "Detail")) || undefined,
+          url: prop.url(p, "URL"),
+        })),
     posts,
     chat: { suggestions: lines(toPlain(prop.richText(profilePage, "Chat Suggestions"))) },
     meta: { fetchedAt: new Date().toISOString() },

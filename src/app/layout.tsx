@@ -12,7 +12,7 @@ import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getContent } from "@/lib/cms/content";
 import { RESUME_PATH } from "@/lib/resume";
-import { allProjects, socialLinks, xHandle } from "@/lib/cms/select";
+import { allProjects, blogLink, socialLinks, xHandle } from "@/lib/cms/select";
 import { homeGraph } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     formatDetection: { telephone: false },
     alternates: {
       canonical: "/",
-      types: { "application/rss+xml": "/blog/rss.xml" },
+      ...(blogLink(content)?.external === false ? { types: { "application/rss+xml": "/blog/rss.xml" } } : {}),
     },
     openGraph: {
       type: "website",
@@ -69,6 +69,9 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
       googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
     },
+    // The site has its own dark theme; Dark Reader recolouring it on top distorts the design
+    // (and its injected attributes break hydration). This meta tag tells it to stand down.
+    other: { "darkreader-lock": "true" },
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
       ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
       : {}),
@@ -91,7 +94,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${serif.variable}`}>
-      <body className="min-h-svh">
+      {/* Grammarly writes attributes onto <body> before React hydrates. This covers body's own attributes only. */}
+      <body className="min-h-svh" suppressHydrationWarning>
         <ThemeProvider>
           <a
             href="#main"
@@ -101,7 +105,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </a>
           <div aria-hidden className="grain" />
           <ScrollProgress />
-          <TopNav name={profile.name} socials={socials} showBlog={content.posts.length > 0} />
+          <TopNav name={profile.name} socials={socials} blog={blogLink(content)} />
           {children}
           <ResumeHost src={RESUME_PATH} />
           <ChatLauncher

@@ -1,16 +1,15 @@
 import { InlineMd } from "@/components/ui/InlineMd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { formatRange } from "@/lib/format";
-import type { Achievement, Education, Profile, Skill } from "@/lib/cms/schema";
+import type { Education, Profile, Skill } from "@/lib/cms/schema";
 
 type Props = {
   profile: Profile;
   education: Education[];
-  achievements: Achievement[];
   skillGroups: { category: string; skills: Skill[] }[];
 };
 
-export function About({ profile, education, achievements, skillGroups }: Props) {
+export function About({ profile, education, skillGroups }: Props) {
   return (
     <section id="about" className="container-x py-24 md:py-32">
       <SectionHeading title="About" lede="How I got here and what I reach for." />
@@ -39,25 +38,6 @@ export function About({ profile, education, achievements, skillGroups }: Props) 
             </div>
           ))}
 
-          {achievements.length > 0 ? (
-            <div className="border-t border-line pt-5">
-              <dt className="text-[13px] text-muted">Competitive programming</dt>
-              {achievements.map((a, i) => (
-                <dd key={i} className="prose-md mt-2 text-[15px] leading-relaxed text-fg-soft">
-                  <InlineMd text={a.text} />
-                  {a.url ? (
-                    <>
-                      {" "}
-                      <a href={a.url} target="_blank" rel="noopener noreferrer" className="link">
-                        Profile
-                      </a>
-                    </>
-                  ) : null}
-                </dd>
-              ))}
-            </div>
-          ) : null}
-
           {profile.location ? (
             <div className="border-t border-line pt-5">
               <dt className="text-[13px] text-muted">Based in</dt>
@@ -69,9 +49,10 @@ export function About({ profile, education, achievements, skillGroups }: Props) 
 
       <div className="mt-24">
         <h3 className="text-[1.25rem] font-semibold tracking-[-0.01em] text-fg">Skills</h3>
-        <p className="mt-2 max-w-[60ch] text-[15px] text-muted">
-          Brighter tags are the tools I reach for most weeks.
-        </p>
+        {/* Only true when a skill has Highlight ticked in Notion, which none do today. */}
+        {skillGroups.some((g) => g.skills.some((s) => s.highlight)) ? (
+          <p className="mt-2 max-w-[60ch] text-[15px] text-muted">Brighter tags are the tools I reach for most weeks.</p>
+        ) : null}
 
         <div className="mt-6 divide-y divide-line border-y border-line">
           {skillGroups.map(({ category, skills }) => (

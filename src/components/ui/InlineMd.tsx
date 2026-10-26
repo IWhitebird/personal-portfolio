@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import { siteUrl } from "@/lib/site";
 
 /**
  * Renders the inline-markdown subset used across the content:
@@ -19,8 +20,10 @@ export function renderInlineMd(text: string): ReactNode[] {
     } else if (tok.startsWith("`")) {
       out.push(<code key={key++}>{tok.slice(1, -1)}</code>);
     } else {
-      const [, label, href] = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(tok) ?? [];
-      if (label && href) {
+      const [, label, url] = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(tok) ?? [];
+      if (label && url) {
+        // Notion only stores absolute links, so a link to this site comes back as one.
+        const href = url.startsWith(`${siteUrl}/`) ? url.slice(siteUrl.length) : url;
         const external = /^https?:/.test(href);
         out.push(
           <a

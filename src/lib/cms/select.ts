@@ -34,6 +34,14 @@ export function skillsByCategory(content: SiteContent): { category: string; skil
     .filter((group) => group.skills.length > 0);
 }
 
+export type BlogLink = { href: string; external: boolean };
+
+/** Where "Blog" points: his profile on proomt when set, else the local blog once a post is published. */
+export function blogLink(content: SiteContent): BlogLink | null {
+  if (content.profile.blogUrl) return { href: content.profile.blogUrl, external: true };
+  return content.posts.length ? { href: "/blog", external: false } : null;
+}
+
 /** Newest first. */
 export function posts(content: SiteContent): Post[] {
   return [...content.posts].sort((a, b) => b.date.localeCompare(a.date));

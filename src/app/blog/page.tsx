@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { JsonLd } from "@/components/ui/JsonLd";
@@ -6,6 +7,9 @@ import { getContent } from "@/lib/cms/content";
 import { posts } from "@/lib/cms/select";
 import { formatPostDate } from "@/lib/format";
 import { blogGraph } from "@/lib/seo";
+
+// With a Blog URL set this page only redirects, which cannot be an instant navigation.
+export const instant = false;
 
 const describe = (name: string) => `Notes on distributed systems, real-time video, and agentic AI by ${name}.`;
 
@@ -23,6 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogPage() {
   const content = await getContent();
+  // He writes on proomt now; old links to /blog land there instead of on an empty page.
+  if (content.profile.blogUrl) redirect(content.profile.blogUrl);
   const all = posts(content);
 
   return (

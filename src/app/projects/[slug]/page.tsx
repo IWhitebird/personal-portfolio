@@ -7,6 +7,7 @@ import { SphereBackground } from "@/components/sphere/SphereBackground";
 import { TableOfContents, hasOutline } from "@/components/blog/TableOfContents";
 import { InlineMd } from "@/components/ui/InlineMd";
 import { JsonLd } from "@/components/ui/JsonLd";
+import { ProjectPrograms } from "@/components/ui/ProjectPrograms";
 import { ProjectStatus } from "@/components/ui/ProjectStatus";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { getContent } from "@/lib/cms/content";
@@ -66,6 +67,7 @@ export default async function ProjectPage({ params }: Params) {
             {project.name}
           </h1>
           <p className="mt-5 max-w-[40ch] text-[clamp(1.125rem,2vw,1.375rem)] leading-snug text-fg-soft">{project.summary}</p>
+          <ProjectPrograms programs={project.programs} className="mt-5" />
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px]">
             <ProjectStatus status={project.status} />

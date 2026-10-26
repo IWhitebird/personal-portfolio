@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FiArrowUpRight } from "react-icons/fi";
 import { InlineMd } from "@/components/ui/InlineMd";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ProjectPrograms } from "@/components/ui/ProjectPrograms";
 import { ProjectStatus } from "@/components/ui/ProjectStatus";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import type { Project } from "@/lib/cms/schema";
 
-type Props = { featured: Project[]; others: Project[] };
+type Props = { featured: Project[]; others: Project[]; intro?: string };
 
 function ProjectLinks({ project, size = "md" }: { project: Project; size?: "sm" | "md" }) {
   const cls = size === "sm" ? "text-[13px]" : "text-[14px]";
@@ -43,66 +45,143 @@ function ProjectLinks({ project, size = "md" }: { project: Project; size?: "sm" 
   );
 }
 
-export function Projects({ featured, others }: Props) {
+/** The first featured project, shown large: it is the one he most wants a visitor to open. */
+function Spotlight({ project }: { project: Project }) {
+  const image = project.images[0];
+  return (
+    <article className="grid items-start gap-8 md:grid-cols-12 md:gap-12">
+      {image ? (
+        <Link
+          href={`/projects/${project.id}`}
+          className="group block overflow-hidden rounded-lg border border-line bg-surface shadow-panel transition-[border-color,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:border-accent md:order-2 md:col-span-7"
+          aria-label={`${project.name} case study`}
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            sizes="(min-width: 768px) 58vw, 100vw"
+            className="h-auto w-full transition-transform duration-700 ease-out-expo group-hover:scale-[1.015]"
+          />
+        </Link>
+      ) : null}
+
+      <div className="md:order-1 md:col-span-5">
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h3 className="display text-[2.25rem] leading-tight tracking-[-0.015em] text-fg">
+            <Link href={`/projects/${project.id}`} className="transition-colors duration-200 hover:text-accent">
+              {project.name}
+            </Link>
+          </h3>
+          <ProjectStatus status={project.status} />
+        </div>
+        <p className="mt-2 text-[17px] leading-snug text-fg-soft">{project.summary}</p>
+        <ProjectPrograms programs={project.programs} className="mt-4" />
+        <p className="prose-md mt-4 text-[15px] leading-[1.65] text-muted">
+          <InlineMd text={project.description} />
+        </p>
+        <ul className="mt-5 flex flex-wrap gap-1.5">
+          {project.tech.map((t) => (
+            <li key={t} className="chip">
+              {t}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          {project.liveUrl ? (
+            <TrackedLink
+              href={project.liveUrl}
+              event="project_open"
+              properties={{ name: project.name, target: "live" }}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              Visit {project.name}
+              <FiArrowUpRight aria-hidden size={15} />
+            </TrackedLink>
+          ) : null}
+          <Link href={`/projects/${project.id}`} className="btn-ghost">
+            Read the case study
+          </Link>
+          {project.githubUrl ? (
+            <TrackedLink
+              href={project.githubUrl}
+              event="project_open"
+              properties={{ name: project.name, target: "source" }}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link ml-2 text-[14px]"
+            >
+              Source
+            </TrackedLink>
+          ) : null}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/** A compact tile: a thumbnail cropped to one shape so the grid lines up, then a line of copy. */
+function Tile({ project }: { project: Project }) {
+  const image = project.images[0];
+  return (
+    <li className="flex flex-col">
+      {image ? (
+        // The title below links to the same page; this one stays out of the tab order.
+        <Link
+          href={`/projects/${project.id}`}
+          tabIndex={-1}
+          aria-hidden
+          className="group relative block aspect-[16/10] overflow-hidden rounded-lg border border-line bg-surface shadow-panel transition-[border-color,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:border-accent"
+        >
+          <Image
+            src={image.src}
+            alt=""
+            fill
+            sizes="(min-width: 768px) 45vw, 100vw"
+            className="object-cover object-top transition-transform duration-700 ease-out-expo group-hover:scale-[1.015]"
+          />
+        </Link>
+      ) : null}
+      <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3 className="display text-[1.5rem] leading-tight tracking-[-0.01em] text-fg">
+          <Link href={`/projects/${project.id}`} className="transition-colors duration-200 hover:text-accent">
+            {project.name}
+          </Link>
+        </h3>
+        <ProjectStatus status={project.status} />
+      </div>
+      <p className="mt-1.5 text-[15px] leading-snug text-fg-soft">{project.summary}</p>
+      <p className="mt-2 font-mono text-[12px] text-muted">{project.tech.join(", ")}</p>
+      <div className="mt-4">
+        <ProjectLinks project={project} size="sm" />
+      </div>
+    </li>
+  );
+}
+
+export function Projects({ featured, others, intro }: Props) {
+  const [spotlight, ...rest] = featured;
+
   return (
     <section id="projects" className="container-x py-24 md:py-32">
-      <SectionHeading
-        title="Projects"
-        lede="Side projects that go deeper than a weekend: a language with its own interpreter, and a multiplayer game with real consistency problems."
-      />
+      <SectionHeading title="Projects" lede={intro ?? "Side projects that go deeper than a weekend."} />
 
-      <div className="mt-14 space-y-20 md:space-y-28">
-        {featured.map((project, index) => {
-          const image = project.images[0];
-          const flip = index % 2 === 1;
-          return (
-            <article key={project.id} className="grid items-start gap-8 md:grid-cols-12 md:gap-12">
-              {image ? (
-                <Link
-                  href={`/projects/${project.id}`}
-                  className={`group block overflow-hidden rounded-lg border border-line bg-surface shadow-panel transition-[border-color,transform] duration-500 ease-out-expo hover:-translate-y-1 hover:border-accent md:col-span-7 ${flip ? "md:order-2" : ""}`}
-                  aria-label={`${project.name} case study`}
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    sizes="(min-width: 768px) 58vw, 100vw"
-                    className="h-auto w-full transition-transform duration-700 ease-out-expo group-hover:scale-[1.015]"
-                    loading="eager"
-                  />
-                </Link>
-              ) : null}
+      {spotlight ? (
+        <div className="mt-14">
+          <Spotlight project={spotlight} />
+        </div>
+      ) : null}
 
-              <div className={`md:col-span-5 ${flip ? "md:order-1" : ""}`}>
-                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <h3 className="display text-[1.875rem] leading-tight tracking-[-0.01em] text-fg">
-                    <Link href={`/projects/${project.id}`} className="transition-colors duration-200 hover:text-accent">
-                      {project.name}
-                    </Link>
-                  </h3>
-                  <ProjectStatus status={project.status} />
-                </div>
-                <p className="mt-2 text-[17px] leading-snug text-fg-soft">{project.summary}</p>
-                <p className="prose-md mt-4 text-[15px] leading-[1.65] text-muted">
-                  <InlineMd text={project.description} />
-                </p>
-                <ul className="mt-5 flex flex-wrap gap-1.5">
-                  {project.tech.map((t) => (
-                    <li key={t} className="chip">
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <ProjectLinks project={project} />
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+      {rest.length > 0 ? (
+        <ul className="mt-20 grid gap-x-10 gap-y-14 md:mt-24 md:grid-cols-2">
+          {rest.map((project) => (
+            <Tile key={project.id} project={project} />
+          ))}
+        </ul>
+      ) : null}
 
       {others.length > 0 ? (
         <div className="mt-24">

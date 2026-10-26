@@ -36,6 +36,12 @@ export const ProfileSchema = z.object({
   socials: SocialsSchema,
   availability: AvailabilitySchema,
   taglines: z.array(z.string()).default([]),
+  /** What he is building right now, one line under the headline. */
+  now: md.optional(),
+  /** One-sentence intro under the Projects heading. Names projects, so it lives with them in Notion. */
+  projectsIntro: z.string().optional(),
+  /** Where his writing lives (his proomt profile). Replaces the local /blog when set. */
+  blogUrl: z.url().optional(),
   seo: z.object({
     title: z.string(),
     description: z.string().max(200),
@@ -76,6 +82,8 @@ export const ProjectSchema = z.object({
   githubUrl: urlOrEmpty.optional(),
   tech: z.array(z.string()),
   status: z.enum(["live", "wip", "archived"]).default("live"),
+  /** Startup programs it was accepted into (one per line in Notion), shown as pills. */
+  programs: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   order: z.number().default(0),
 });
@@ -96,8 +104,10 @@ export const EducationSchema = z.object({
   end: yearMonth.nullable(),
 });
 
+/** One row of the Achievements section: a short title, one line of context, and where to check it. */
 export const AchievementSchema = z.object({
-  text: md,
+  title: z.string(),
+  detail: md.optional(),
   url: z.url().optional(),
 });
 

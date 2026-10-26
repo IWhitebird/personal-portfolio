@@ -59,6 +59,7 @@ export function getContactInfo(content: SiteContent) {
     location: profile.location,
     availability: profile.availability.label,
     links: Object.fromEntries(socialLinks(content).map((s) => [s.label, s.href])),
+    writing: profile.blogUrl,
     resumeUrl: `${siteUrl}${RESUME_PATH}`,
     contactForm: `${siteUrl}/#contact`,
   };
@@ -88,8 +89,9 @@ export function searchContent(content: SiteContent, query: string): Hit[] {
     for (const block of p.body) if ("text" in block) add(`Project: ${p.name} (case study)`, block.text);
   }
   for (const s of content.skills) add(`Skill, ${s.category}`, s.highlight ? `${s.name} (a primary tool)` : s.name);
-  for (const a of content.achievements) add("Achievement", a.text);
+  for (const a of content.achievements) add("Achievement", [a.title, a.detail].filter(Boolean).join(": "));
   for (const paragraph of content.profile.bio) add("About", paragraph);
+  if (content.profile.now) add("Building now", content.profile.now);
 
   const phrase = rows.filter((r) => r.hay.includes(q));
   const hits = phrase.length || words.length < 2 ? phrase : rows.filter((r) => words.every((w) => r.hay.includes(w)));
@@ -108,9 +110,13 @@ export function summaryFacts(content: SiteContent): string {
   const lines = [
     `Name: ${profile.name}. ${profile.headline}`,
     current ? `Now: ${current.role} at ${current.company}, since ${formatRange(current.start, null).split(" – ")[0]}.` : null,
+    profile.now ? `Building now: ${stripInlineMd(profile.now)}` : null,
+    profile.blogUrl ? `Writes at ${profile.blogUrl} (his profile on proomt, his own product).` : null,
     previous.length ? `Before: ${previous.map((p) => `${p.role} at ${p.company} (${formatRange(p.start, p.end)})`).join("; ")}.` : null,
     edu ? `Education: ${edu.degree}, ${edu.institution}${edu.gpa ? `, GPA ${edu.gpa}` : ""} (${formatRange(edu.start, edu.end)}).` : null,
-    achievements.length ? `Achievements: ${achievements.map((a) => stripInlineMd(a.text)).join(" ")}` : null,
+    achievements.length
+      ? `Achievements: ${achievements.map((a) => (a.detail ? `${a.title} (${stripInlineMd(a.detail)})` : a.title)).join("; ")}.`
+      : null,
     featured.length ? `Featured projects: ${featured.join("; ")}.` : null,
     primarySkills.length ? `Primary tools: ${primarySkills.join(", ")}.` : null,
     profile.location ? `Location: ${profile.location}.` : null,
